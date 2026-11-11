@@ -1,6 +1,6 @@
 // Sticker Siege offline support: the page itself is fetched fresh when online (so updates show up),
 // everything else (icons, fonts) is served from the cache first.
-const CACHE = "sticker-siege-v3";
+const CACHE = "sticker-siege-v4";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {

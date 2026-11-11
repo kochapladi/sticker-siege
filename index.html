@@ -17,6 +17,7 @@
   [hidden] { display: none !important; }
 </style>
 <title>Sticker Siege</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -204,7 +205,7 @@
   .bar { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 12px; align-items: start; }
   .sheet {
     background: #f4f6fb; border-radius: 14px; padding: 10px;
-    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;
     align-items: start; align-content: start;
     box-shadow: 0 6px 16px rgba(0,0,0,0.3);
   }
@@ -326,10 +327,10 @@
     .app { max-width: 1500px; }
     .play { grid-template-columns: minmax(0, 1fr) 330px; }
     .bar { grid-template-columns: minmax(0, 1fr); }
-    .sheet { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 8px; }
-    .sticker { padding: 4px 2px; }
-    .sticker canvas { width: 44px; height: 44px; }
-    .sticker .nm { font-size: 14px; }
+    .sheet { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; padding: 7px; }
+    .sticker { padding: 4px 1px; }
+    .sticker canvas { width: 42px; height: 42px; }
+    .sticker .nm { font-size: 13px; }
     .sticker .cost { font-size: 13px; padding: 0 6px; }
     .info { min-height: 0; }
     .controls > .btn { flex: 1 1 100%; }
@@ -347,7 +348,6 @@
 </style>
 </head>
 <body>
-
 
 <div class="app">
   <header class="hud">
@@ -522,8 +522,10 @@
                perks: ["One beam", "Heats up twice as fast", "Splits into two beams"] },
     heart:   { name: "Heart",     cost: 90,  range: 100, rate: 0,    dmg: 0,  desc: "Doesn't attack. Stickers nearby fire faster.",
                perks: ["Nearby stickers fire 15% faster", "Nearby stickers fire 25% faster", "Wings: 35% faster and 25% more damage"] },
+    jar:     { name: "Glitter Bottle", cost: 100, range: 60, rate: 0, dmg: 0, desc: "Doesn't attack. Shakes out glitter piles during each wave. Tap or swipe the piles to collect them before they fade.",
+               perks: ["Glitter piles", "More glitter", "Glitter factory"] },
   };
-  const ORDER = ["star", "rainbow", "snow", "rocket", "zap", "sun", "heart"];
+  const ORDER = ["star", "rainbow", "snow", "rocket", "zap", "sun", "heart", "jar"];
   const FIRE = ["#ff5d2a", "#ff8a3d", "#ffb03b", "#ffd23f"];
 
   // ---------- Upgrade paths: 3 per sticker, 5 tiers each ----------
@@ -671,14 +673,35 @@
         ["Love Letter", "+40 more glitter every wave", { waveGlitter: 40 }],
         ["Life Saver", "+1 life every wave", { lifeWave: 1 }] ] },
     ],
+    jar: [
+      { name: "Bigger Batches", ups: [
+        ["Extra Shake", "+2 glitter piles every wave", { piles: 2 }],
+        ["Double Shake", "+3 more glitter piles every wave", { piles: 3 }],
+        ["Glitter Factory", "Makes glitter tubs worth 13 instead of piles", { value: 13 }],
+        ["Glitter Lab", "Tubs worth 22, +1 tub every wave", { value: 22, piles: 1 }],
+        ["Glitter Galaxy", "Tubs worth 40, +2 tubs. Other bottles make 25% more", { value: 40, piles: 2, galaxy: true }] ] },
+      { name: "Fancy Glitter", ups: [
+        ["Sticky Glitter", "Piles stay on the page twice as long", { life: 30 }],
+        ["Extra Shiny", "Glitter is worth 25% more", { valueMul: 1.25 }],
+        ["Piggy Bank", "Saves glitter inside instead. +15% interest every wave, holds up to 1500", { bank: true, interest: 0.15, cap: 1500 }],
+        ["Glitter Vault", "+20% interest, holds up to 3500", { interest: 0.2, cap: 3500 }],
+        ["Treasure Chest", "+25% interest, holds 10000. Every doodle popped adds 2 glitter", { interest: 0.25, cap: 10000, popBank: 2 }] ] },
+      { name: "Easy Pickings", ups: [
+        ["Magnet Lid", "Piles collect themselves after 4 seconds", { autoT: 4 }],
+        ["Recycling", "Peeling off any of its glitter gives back 85% instead of 60%", { refundRate: 0.85 }],
+        ["Glitter Shop", "No more tapping: 4 extra drops worth 10, straight to your purse", { auto: true, piles: 4, value: 10 }],
+        ["Glitter Mall", "Drops worth 18, +2 drops every wave", { value: 18, piles: 2 }],
+        ["Glitter Empire", "Drops worth 30, +2 drops. Triple wave bonus, every bottle collects itself", { value: 30, piles: 2, empire: true }] ] },
+    ],
   };
   const BASE_EXTRA = {
     star: { shots: 1, bounce: 0 }, rainbow: { blobs: 1 }, snow: { slow: 0.55, freezeEvery: 0, freezeDur: 0.9 },
     rocket: { rockets: 1, blast: 30, bombletMul: 1 }, zap: { chains: 3, falloff: 0.85 }, sun: { heat: 1, maxHeat: 2, beams: 1 },
     heart: { haste: 1 / 1.15, dmgBuff: 1, rangeBuff: 1, waveGlitter: 0, lifeWave: 0 },
+    jar: { piles: 4, value: 6, valueMul: 1, life: 14, autoT: 0, refundRate: 0.6, interest: 0, cap: 0, popBank: 0 },
   };
-  const ADD_KEYS = new Set(["dmg", "range", "splash", "chains", "blast", "waveGlitter", "lifeWave"]);
-  const MUL_KEYS = new Set(["dmgMul", "rate", "heat", "bombletMul"]);
+  const ADD_KEYS = new Set(["dmg", "range", "splash", "chains", "blast", "waveGlitter", "lifeWave", "piles"]);
+  const MUL_KEYS = new Set(["dmgMul", "rate", "heat", "bombletMul", "valueMul"]);
   function getStats(t) {
     const b = TYPES[t.type];
     const s = { range: b.range, rate: b.rate, dmg: b.dmg, splash: b.splash || 0, dmgMul: 1, ...(BASE_EXTRA[t.type] || {}) };
@@ -713,7 +736,7 @@
       heatRate: [0.55, 1.1, 1.1][lvl - 1],
     };
   }
-  const refund = (t) => Math.round(t.spent * 0.6);
+  const refund = (t) => Math.round(t.spent * (t.type === "jar" ? getStats(t).refundRate : 0.6) + (t.bank || 0));
 
   // ---------- Heroes ----------
   const HEROES = {
@@ -821,6 +844,7 @@
     { id: "snip",   name: "Cut short",      desc: "Defeat the scissors",                   art: "heart",   lvl: 3 },
     { id: "showtime", name: "Showtime",     desc: "Use a hero power",                      art: "zap",     lvl: 2 },
     { id: "legend", name: "Legend",         desc: "Get a hero to level 10",                art: "star",    lvl: 3 },
+    { id: "hoard",  name: "Glitter hoarder", desc: "Collect 500 glitter from glitter bottles in one game", art: "jar", lvl: 2 },
   ];
 
   // ---------- Settings & progress (per browser) ----------
@@ -854,6 +878,7 @@
 
   // ---------- Game state ----------
   let coins, lives, wave, waveActive, queue, waveTime, spawnN, autoT, lostThisWave;
+  let drops = [], waveSpan = 30, jarTotal = 0;
   let towers = [], enemies = [], shots = [], parts = [], texts = [], decals = [], bolts = [], zones = [], newborn = [];
   let seen = {}, xpHinted = false;
   let timers = [], clock = 0, stormT = 0, stormTick = 0, stormDmg = 0, frenzyT = 0, quizFlash = 0;
@@ -868,7 +893,7 @@
     buildPaths();
     coins = MAPS[mapId].startCoins; lives = 20; wave = 0; waveActive = false; queue = []; waveTime = 0;
     spawnN = 0; autoT = 0; lostThisWave = false;
-    towers = []; enemies = []; shots = []; parts = []; texts = []; decals = []; bolts = []; zones = []; newborn = []; seen = {};
+    towers = []; enemies = []; shots = []; parts = []; texts = []; decals = []; bolts = []; zones = []; newborn = []; seen = {}; drops = []; jarTotal = 0;
     timers = []; clock = 0; stormT = 0; frenzyT = 0; quizFlash = 0; xpHinted = false;
     shake = 0; vignette = 0; hitstop = 0;
     over = false; won = false; placing = null; selected = null;
@@ -947,6 +972,7 @@
       case "stomp": tone(80, 0.25, "sine", 0.2, 0.6); noise(0.15, 0.15, 180); break;
       case "pencil": noise(0.05, 0.08, 3000); break;
       case "hbolt": tone(1600, 0.06, "triangle", 0.02, 1.6); break;
+      case "coin": tone(1760 + Math.random() * 300, 0.08, "triangle", 0.035, 1.3); tone(2640, 0.1, "sine", 0.02, 1, 0.04); break;
       case "pop": tone(320, 0.09, "triangle", 0.05, 0.45); break;
       case "leak": tone(170, 0.4, "sawtooth", 0.05, 0.5); break;
       case "wave": tone(440, 0.12, "triangle", 0.06); tone(660, 0.18, "triangle", 0.06, 1, 0.12); break;
@@ -1112,6 +1138,8 @@
         heartPath(c, R * 0.95);
         if (level === 3) for (const sx of [-1, 1]) { const cx = sx * R * 0.92, cy = -4, rot = sx * -0.5; c.moveTo(cx + Math.cos(rot) * 11, cy + Math.sin(rot) * 11); c.ellipse(cx, cy, 11, 7, rot, 0, Math.PI * 2); }
         break;
+      case "jar":
+        c.beginPath(); jarBody(c); break;
       case "rocket":
         c.beginPath(); c.ellipse(0, -2, R * 0.48, R * 0.95, 0, 0, Math.PI * 2);
         c.moveTo(-R * 0.4, 4); c.lineTo(-R * 0.85, R * 0.8); c.lineTo(-R * 0.15, R * 0.62); c.closePath();
@@ -1227,6 +1255,8 @@
       c.beginPath(); c.arc(-3, -4, R * 0.54, 0, 7); c.fillStyle = lg; c.fill();
       c.fillStyle = "#ffb400"; c.beginPath(); c.arc(-1, -2, 3.2, 0, 7); c.fill();
       c.strokeStyle = "rgba(255,255,255,0.9)"; c.lineWidth = 2; c.lineCap = "round"; c.beginPath(); c.arc(-3, -4, R * 0.42, 3.6, 4.4); c.stroke();
+    } else if (type === "jar") {
+      jarArt(c, level);
     } else if (type === "heart") {
       if (level === 3) {
         for (const sx of [-1, 1]) {
@@ -1244,6 +1274,37 @@
       c.strokeStyle = "#4a1020"; c.lineWidth = 1.6; c.lineCap = "round"; c.beginPath(); c.arc(0, 2, 3.5, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
       if (level >= 2) { c.fillStyle = "#fff"; c.save(); c.translate(9, -10); c.rotate(0.3); heartPath(c, 3.2); c.fill(); c.restore(); }
     }
+  }
+  function jarBody(c) {
+    rrect(c, -15, -7, 30, 32, 11);
+    rrect(c, -7, -21, 14, 16, 3);
+    rrect(c, -9.5, -29, 19, 10, 3);
+  }
+  const GLIT = [[-8, 14, "#ff6fa0"], [-2, 18, "#ffd23f"], [5, 13, "#7fe0b0"], [9, 19, "#8fc1ff"], [-10, 20, "#c89bff"], [2, 9, "#ff9ec4"], [-5, 7, "#ffe14d"], [8, 6, "#c89bff"], [0, 21, "#ff6fa0"]];
+  function jarArt(c, level) {
+    const glass = c.createLinearGradient(-15, 0, 15, 0);
+    glass.addColorStop(0, "#cfe9fb"); glass.addColorStop(0.5, "#f2fbff"); glass.addColorStop(1, "#b8dcf4");
+    c.beginPath(); rrect(c, -15, -7, 30, 32, 11); rrect(c, -7, -21, 14, 16, 3); c.fillStyle = glass; c.fill();
+    c.save(); c.beginPath(); rrect(c, -15, -7, 30, 32, 11); c.clip();
+    const fill = c.createLinearGradient(0, 0, 0, 25);
+    fill.addColorStop(0, level === 3 ? "#ffe270" : "#f7a6d8"); fill.addColorStop(1, level === 3 ? "#e9a91c" : "#a77bf0");
+    c.fillStyle = fill; c.beginPath(); c.moveTo(-16, level >= 2 ? 1 : 6);
+    c.quadraticCurveTo(0, level >= 2 ? -3 : 3, 16, level >= 2 ? 1 : 6); c.lineTo(16, 26); c.lineTo(-16, 26); c.closePath(); c.fill();
+    for (const [x, y, col] of GLIT) { if (y < (level >= 2 ? 2 : 7)) continue; c.fillStyle = level === 3 ? "#fff6c8" : col; c.beginPath(); c.arc(x, y, 1.6, 0, 7); c.fill(); }
+    c.restore();
+    c.strokeStyle = "rgba(90,130,170,0.55)"; c.lineWidth = 1.2; c.beginPath(); rrect(c, -15, -7, 30, 32, 11); c.stroke();
+    c.fillStyle = "rgba(255,255,255,0.75)"; c.beginPath(); rrect(c, -11, -3, 4, 16, 2); c.fill();
+    const cork = c.createLinearGradient(0, -29, 0, -19);
+    cork.addColorStop(0, level === 3 ? "#ffe270" : "#d9a066"); cork.addColorStop(1, level === 3 ? "#d49a12" : "#a8693a");
+    c.beginPath(); rrect(c, -9.5, -29, 19, 10, 3); c.fillStyle = cork; c.fill();
+    if (level >= 2) {
+      c.fillStyle = level === 3 ? "#e0525b" : "#ff6fa0";
+      c.beginPath(); c.moveTo(0, -15); c.lineTo(-9, -20); c.lineTo(-9, -10); c.closePath(); c.moveTo(0, -15); c.lineTo(9, -20); c.lineTo(9, -10); c.closePath(); c.fill();
+      c.beginPath(); c.arc(0, -15, 2.6, 0, 7); c.fill();
+    }
+    if (level === 3) { c.save(); c.translate(0, 13); starPath(c, 6, 0.45); c.fillStyle = "#fff"; c.fill(); c.restore(); }
+    c.fillStyle = "#3a2a4a"; c.beginPath(); c.arc(-4.5, -1, 1.7, 0, 7); c.arc(4.5, -1, 1.7, 0, 7); c.fill();
+    c.strokeStyle = "#3a2a4a"; c.lineWidth = 1.4; c.lineCap = "round"; c.beginPath(); c.arc(0, 1, 2.6, 0.15 * Math.PI, 0.85 * Math.PI); c.stroke();
   }
   const CLOUD = [[-10, -14, 9], [2, -18, 11], [13, -12, 8]];
   const BOLT = [[2, -26], [-14, 2], [-3, 2], [-8, 26], [15, -6], [3, -6], [11, -26]];
@@ -1742,6 +1803,7 @@
     coins -= cost;
     const nt = { type, x, y, level: 1, paths: [0, 0, 0], cd: 0.2, rot: (Math.random() - 0.5) * 0.5, spent: cost, pop: 1, kick: 0, sheen: 0, stun: 0 };
     if (type === "hero") Object.assign(nt, { hero: heroId, hlvl: 1, xp: 0, abCd: [0, 0], rot: 0 });
+    if (type === "jar") { nt.bank = 0; nt.made = waveActive ? Math.floor(Math.min(1, waveTime / waveSpan) * getStats(nt).piles) : 0; }
     towers.push(nt);
     slap(x, y);
     if (type === "hero") heroArrive(nt);
@@ -1804,6 +1866,8 @@
     }
     wave++;
     queue = buildWave(wave);
+    waveSpan = Math.max(10, (queue.length ? queue[queue.length - 1].t : 0) + 8);
+    for (const t of towers) if (t.type === "jar") t.made = 0;
     waveTime = 0; waveActive = true; autoT = 0; lostThisWave = false;
     sfx("wave");
     const bossMsg = { 5: "a coffee stain is coming!", 10: "the scissors are coming!", 15: "stains and scissors!" }[wave];
@@ -1877,6 +1941,7 @@
         earn("blot");
       }
       if (e.kind === "eraser") earn("eraser");
+      for (const j of towers) if (j.type === "jar" && j.st && j.st.popBank) j.bank = Math.min(j.st.cap, (j.bank || 0) + j.st.popBank);
       for (const h of towers) if (h.type === "heart" && h.st && h.st.goldHeart && Math.hypot(h.x - e.x, h.y - e.y) <= h.st.range) { coins += 2; break; }
       if (e.burnT > 0 && e.wild) for (const o of enemies) if (o !== e && !o.dead && Math.hypot(o.x - e.x, o.y - e.y) < 55) { o.burnT = 2.5; o.burnDps = e.burnDps; o.wild = true; burst(o.x, o.y, 4, ["#ff8a3d", "#ffd23f"], 90, "spark"); }
       if (opts.hero) gainXP(6);
@@ -2251,6 +2316,110 @@
     return true;
   }
 
+  // ---------- Glitter bottles ----------
+  const jarCollectsItself = () => towers.some((o) => o.type === "jar" && o.st && o.st.empire);
+  function jarValue(t, st) {
+    const galaxy = towers.some((o) => o !== t && o.type === "jar" && o.st && o.st.galaxy);
+    return Math.round(st.value * st.valueMul * (galaxy ? 1.25 : 1));
+  }
+  function makeDrop(t) {
+    const st = t.st || getStats(t);
+    t.made = (t.made || 0) + 1;
+    const v = jarValue(t, st);
+    t.kick = 0.8;
+    if (st.bank) {
+      const before = t.bank || 0;
+      t.bank = Math.min(st.cap, before + v);
+      if (t.bank >= st.cap && before < st.cap) say(t.x, t.y - 40, "Bank full! Cash it out", "#e0525b", 1.8, 18);
+      for (let i = 0; i < 5; i++) fx({ x: t.x + (Math.random() - 0.5) * 30, y: t.y - 40 - Math.random() * 10, vx: 0, vy: 60, life: 0.5, max: 0.5, size: 3, color: RAINBOW[i % 6], shape: "spark", g: 0, rot: Math.random() * 6 });
+      say(t.x + 18, t.y - 30, `+${v}`, "#8a5d00", 0.7, 15);
+      return;
+    }
+    if (st.auto) {
+      coins += v; jarTotal += v;
+      say(t.x, t.y - 34, `+${v}`, "#8a5d00", 0.9, 17);
+      for (let i = 0; i < 8; i++) fx({ x: t.x, y: t.y - 20, vx: (Math.random() - 0.5) * 120, vy: -90 - Math.random() * 80, life: 0.7, max: 0.7, size: 3.5, color: i % 2 ? "#ffd23f" : "#ff9ec4", shape: "spark", g: 1, rot: Math.random() * 6 });
+      ring(t.x, t.y - 10, 6, 30, "rgba(255,210,63,", 0.35, 3);
+      sfx("coin");
+      if (jarTotal >= 500) earn("hoard");
+      return;
+    }
+    let tx = t.x, ty = t.y;
+    for (let k = 0; k < 8; k++) {
+      const a = Math.random() * Math.PI * 2, d = 26 + Math.random() * (st.range - 26);
+      tx = Math.max(16, Math.min(W - 16, t.x + Math.cos(a) * d)); ty = Math.max(16, Math.min(H - 16, t.y + Math.sin(a) * d));
+      if (!drops.some((o) => Math.hypot(o.tx - tx, o.ty - ty) < 18)) break;
+    }
+    drops.push({ sx: t.x, sy: t.y - 24, tx, ty, x: t.x, y: t.y, t: 0, fly: 0.55, v, big: st.value >= 13, life: st.life, max: st.life,
+      autoT: st.autoT || (jarCollectsItself() ? 2 : 0), seed: Math.random() * 6 });
+    burst(t.x, t.y - 26, 4, ["#ff9ec4", "#ffd23f", "#c89bff"], 70, "spark");
+  }
+  function jarUpdate(t, dt) {
+    const st = t.st;
+    if (waveActive && (t.made || 0) < st.piles && waveTime >= ((t.made || 0) + 0.6) * waveSpan / st.piles) makeDrop(t);
+    if (settings.vfx && Math.random() < dt * 1.2) fx({ x: t.x + (Math.random() - 0.5) * 24, y: t.y + (Math.random() - 0.5) * 20, vx: 0, vy: -18, life: 0.8, max: 0.8, size: 3, color: t.level === 3 ? "#ffd23f" : "#ff9ec4", shape: "spark", g: 0, rot: Math.random() * 6 });
+  }
+  function collectDrop(d, how) {
+    if (d.done) return;
+    d.done = true; coins += d.v; jarTotal += d.v;
+    say(d.x, d.y - 16, `+${d.v}`, "#8a5d00", 0.9, d.big ? 20 : 17);
+    burst(d.x, d.y, d.big ? 12 : 7, ["#ffd23f", "#ff9ec4", "#c89bff", "#7fe0b0"], 140, "spark");
+    ring(d.x, d.y, 4, d.big ? 30 : 20, "rgba(255,210,63,", 0.3, 3);
+    sfx("coin");
+    if (jarTotal >= 500) earn("hoard");
+  }
+  function collectAt(x, y, r) {
+    let got = false;
+    for (const d of drops) if (!d.done && d.t >= d.fly && Math.hypot(d.x - x, d.y - y) < r) { collectDrop(d); got = true; }
+    return got;
+  }
+  function updateDrops(dt) {
+    for (const d of drops) {
+      d.t += dt;
+      if (d.t < d.fly) { const k = d.t / d.fly; d.x = d.sx + (d.tx - d.sx) * k; d.y = d.sy + (d.ty - d.sy) * k - Math.sin(Math.PI * k) * 36; continue; }
+      if (d.x !== d.tx || d.y !== d.ty) { d.x = d.tx; d.y = d.ty; puffs(d.x, d.y + 4, 1, "#f1e6ff"); }
+      d.life -= dt;
+      if (d.autoT && d.t - d.fly >= d.autoT) collectDrop(d);
+      else if (d.life <= 0 && !d.done) { d.done = true; puffs(d.x, d.y, 2, "#e8e2f0"); }
+    }
+    drops = drops.filter((d) => !d.done);
+  }
+  function cashOut(t) {
+    if (!t || !t.bank) return;
+    const v = Math.floor(t.bank); t.bank = 0;
+    coins += v; jarTotal += v;
+    say(t.x, t.y - 40, `+${v} glitter`, "#8a5d00", 1.6, 24);
+    word(t.x, t.y - 64, "KA-CHING!", "#e0a800", true);
+    burst(t.x, t.y, 24, ["#ffd23f", "#f3cf55", "#ff9ec4", "#c89bff"], 220, "spark");
+    ring(t.x, t.y, R, R * 3, "rgba(255,210,63,", 0.45, 5);
+    sfx("gold");
+    if (jarTotal >= 500) earn("hoard");
+    panelKey = "";
+  }
+  function drawDrop(c, d, now) {
+    const flying = d.t < d.fly;
+    const blink = !flying && d.life < 3 && !d.autoT ? (Math.sin(now * 18) > 0 ? 0.35 : 1) : 1;
+    const bob = flying ? 0 : Math.sin(now * 3 + d.seed) * 1.5;
+    c.save(); c.translate(d.x, d.y + bob); c.scale(1.35, 1.35); c.globalAlpha = blink;
+    if (!flying) { c.fillStyle = "rgba(30,32,48,0.18)"; c.beginPath(); c.ellipse(0, 7 - bob, 11, 3.5, 0, 0, 7); c.fill(); }
+    if (d.big) {
+      const g = c.createLinearGradient(0, -8, 0, 8); g.addColorStop(0, "#ffe270"); g.addColorStop(1, "#e3a01c");
+      c.fillStyle = "#fff"; c.beginPath(); rrect(c, -11, -7, 22, 15, 4); c.fill();
+      c.fillStyle = g; c.beginPath(); rrect(c, -9, -5, 18, 11, 3); c.fill();
+      c.fillStyle = "#ff6fa0"; c.beginPath(); c.ellipse(0, -5, 9, 3, 0, 0, 7); c.fill();
+      for (let i = 0; i < 5; i++) { c.fillStyle = RAINBOW[(i + 1) % 6]; c.beginPath(); c.arc(-6 + i * 3, -5.5 + (i % 2), 1.2, 0, 7); c.fill(); }
+    } else {
+      c.fillStyle = "#fff"; c.beginPath(); c.ellipse(0, 2, 11, 7, 0, 0, 7); c.fill();
+      const pts = [[-6, 3], [-2, 4], [3, 3], [6, 4], [-4, 0], [1, 0], [4, 1], [-1, -3], [2, -3]];
+      pts.forEach(([x, y], i) => { c.fillStyle = RAINBOW[i % 6]; c.beginPath(); c.arc(x, y, 2.1, 0, 7); c.fill(); });
+    }
+    c.save(); c.translate(6, -8); c.rotate(now * 2 + d.seed); c.scale(0.7 + Math.sin(now * 5 + d.seed) * 0.3, 0.7 + Math.sin(now * 5 + d.seed) * 0.3);
+    c.fillStyle = "#fff"; c.beginPath();
+    for (let i = 0; i < 8; i++) { const rr = i % 2 ? 1.3 : 5; const a = i * Math.PI / 4; c.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+    c.fill(); c.restore();
+    c.restore();
+  }
+
   function update(dt) {
     for (const t of towers) if (t.type !== "hero") t.st = getStats(t);
     if (waveActive) {
@@ -2258,7 +2427,15 @@
       while (queue.length && queue[0].t <= waveTime) spawn(queue.shift().kind);
       if (!queue.length && !enemies.length && !newborn.length) {
         waveActive = false;
-        const bonus = 8 + wave * 2;
+        for (const t of towers) if (t.type === "jar" && t.st) {
+          while ((t.made || 0) < t.st.piles) makeDrop(t);
+          if (t.st.bank && t.bank > 0) {
+            const gain = Math.min(t.st.cap, Math.floor(t.bank * (1 + t.st.interest))) - Math.floor(t.bank);
+            t.bank = Math.min(t.st.cap, t.bank + gain);
+            if (gain > 0) say(t.x, t.y - 46, `+${gain} interest`, "#2f8a4c", 1.6, 17);
+          }
+        }
+        const bonus = (8 + wave * 2) * (towers.some((o) => o.type === "jar" && o.st && o.st.empire) ? 3 : 1);
         coins += bonus;
         for (const t of towers) if (t.type !== "hero") prog.txp[t.type] = (prog.txp[t.type] || 0) + 8 + wave * 2;
         saveProg();
@@ -2405,7 +2582,7 @@
       if (h.stun > 0 || !h.st) continue;
       if (h.type === "heart") {
         const hs = h.st;
-        for (const t of towers) if (t !== h && t.type !== "heart" && Math.hypot(t.x - h.x, t.y - h.y) <= hs.range) {
+        for (const t of towers) if (t !== h && t.type !== "heart" && t.type !== "jar" && Math.hypot(t.x - h.x, t.y - h.y) <= hs.range) {
           t.haste = Math.min(t.haste, hs.haste); t.dmgMul = Math.max(t.dmgMul, hs.dmgBuff); t.rangeMul = Math.max(t.rangeMul, hs.rangeBuff);
           if (hs.cheer) t.cheer = true;
           if (hs.guard) t.guard = true;
@@ -2446,6 +2623,7 @@
       t.sheen = Math.max(0, (t.sheen || 0) - dt * 1.6);
       if (settings.vfx && t.level >= 2 && !t.sheen && Math.random() < dt * 0.12) t.sheen = 1;
       if (t.stun > 0) { t.stun -= dt * (t.cheer ? 2 : 1); t.beams = []; continue; }
+      if (t.type === "jar") { jarUpdate(t, dt); continue; }
       if (t.type === "heart") {
         t.cd -= dt;
         if (t.cd <= 0) {
@@ -2466,6 +2644,7 @@
       }
     }
 
+    updateDrops(dt);
     for (const s of shots) {
       if (s.kind === "star" || s.kind === "ice") {
         if (s.target && !s.target.dead) { s.tx = s.target.x; s.ty = s.target.y; }
@@ -2693,7 +2872,7 @@
       const hs = h.st || getStats(h);
       ctx.save(); ctx.setLineDash([2, 7]); ctx.lineDashOffset = -t * 20; ctx.lineCap = "round";
       ctx.strokeStyle = "rgba(255,110,160,0.6)"; ctx.lineWidth = 2.5;
-      for (const o of towers) if (o !== h && o.type !== "heart" && Math.hypot(o.x - h.x, o.y - h.y) <= hs.range) { ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(o.x, o.y); ctx.stroke(); }
+      for (const o of towers) if (o !== h && o.type !== "heart" && o.type !== "jar" && Math.hypot(o.x - h.x, o.y - h.y) <= hs.range) { ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(o.x, o.y); ctx.stroke(); }
       ctx.restore();
     }
     for (const tw of towers.slice().sort((a, b) => a.y - b.y)) {
@@ -2717,6 +2896,7 @@
       }
     }
 
+    for (const d of drops) drawDrop(ctx, d, t);
     for (const e of enemies) drawEnemy(ctx, e, t);
     drawBeams(t);
     drawBolts();
@@ -3070,6 +3250,7 @@
     hover.x = p.x; hover.y = p.y; hover.inside = p.inside;
     if (drag.active && e.pointerType === "touch") hover.y -= 34;
     if (drag.active && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 8) drag.moved = true;
+    if (!drag.active && p.inside && started && !over && !paused && drops.length && (e.pointerType === "mouse" || e.buttons)) collectAt(p.x, p.y, e.pointerType === "mouse" ? 20 : 30);
   });
   window.addEventListener("pointerup", (e) => {
     if (!drag.active) return;
@@ -3095,6 +3276,7 @@
       updateInfo(true);
       return;
     }
+    if (collectAt(p.x, p.y, 30)) return;
     let hit = null;
     for (const t of towers) if (Math.hypot(t.x - p.x, t.y - p.y) < R + 6) hit = t;
     selected = hit === selected ? null : hit;
@@ -3145,6 +3327,12 @@
   $("upBtn").addEventListener("click", () => {});
   function statLine(t) {
     const st = getStats(t), ty = t.type;
+    if (ty === "jar") {
+      const v = jarValue(t, st);
+      return `${st.piles} ${st.auto ? "drops" : st.value >= 13 ? "tubs" : "piles"} of ${v} glitter every wave (${st.piles * v})` +
+        (st.bank ? ` · saved: ${Math.floor(t.bank || 0)} of ${st.cap} · +${Math.round(st.interest * 100)}% interest` : "") +
+        (st.autoT ? " · collects itself" : "") + (t.stun > 0 ? " · knocked out" : "");
+    }
     const main = ty === "snow" ? `slows to ${Math.round(st.slow * 100)}% · ${Math.round(st.dmg)} damage`
       : ty === "heart" ? `nearby stickers fire ${Math.round((1 / st.haste - 1) * 100)}% faster`
       : ty === "sun" ? `${Math.round(st.dmg)}–${Math.round(st.dmg * (1 + st.maxHeat))} damage per second`
@@ -3160,7 +3348,7 @@
     if (!t) { if (!upanel.hidden) upanel.hidden = true; panelKey = ""; return; }
     const side = t.x > W / 2 ? "left" : "right";
     const states = [0, 1, 2].map((pi) => pathState(t, pi));
-    const key = [side, t.paths.join(""), states.map((st) => st.kind + (st.cost ? (coins >= st.cost) : "")).join(","), t.stun > 0, !!t.buffed].join("|");
+    const key = [side, Math.floor(t.bank || 0), t.paths.join(""), states.map((st) => st.kind + (st.cost ? (coins >= st.cost) : "")).join(","), t.stun > 0, !!t.buffed].join("|");
     if (key === panelKey) return;
     panelKey = key;
     upanel.hidden = false;
@@ -3196,6 +3384,13 @@
       } else box.append(mk("div", "up-note done", `Complete: ${P.ups[4][0]}`));
       upanel.append(box);
     });
+    if (t.type === "jar" && (t.st || getStats(t)).bank) {
+      const cb = mk("button", "up-buy" + (t.bank >= 1 ? "" : " poor"));
+      cb.type = "button";
+      cb.append(mk("b", "", `Cash out · +${Math.floor(t.bank || 0)}`), mk("span", "", "Empty the bank into your glitter"));
+      cb.addEventListener("click", () => { ensureAudio(); cashOut(t); });
+      upanel.append(cb);
+    }
     const sellB = mk("button", "up-sell", `Peel off · +${refund(t)}`); sellB.type = "button";
     sellB.addEventListener("click", () => sell(t));
     upanel.append(sellB);
@@ -3385,7 +3580,7 @@
     if (k === "m" || k === "M") { openMenu(); return; }
     if (!started || over) return;
     if (paused) paused = false;
-    if (k >= "1" && k <= "7") selectType(ORDER[+k - 1]);
+    if (k >= "1" && k <= "8") selectType(ORDER[+k - 1]);
     else if (k === " ") {
       const ae = document.activeElement;
       if (ae && ae.tagName === "BUTTON") return;
@@ -3484,7 +3679,7 @@
   }
   window.claude?.hot?.snapshot?.(() => ({
     started, over, mapId, portrait, coins, lives, wave, waveActive,
-    towers: towers.map(({ type, x, y, level, rot, spent, hero, hlvl, xp, paths }) => ({ type, x, y, level, rot, spent, hero, hlvl, xp, paths })),
+    towers: towers.map(({ type, x, y, level, rot, spent, hero, hlvl, xp, paths, bank }) => ({ type, x, y, level, rot, spent, hero, hlvl, xp, paths, bank })),
   }));
   window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 })();
