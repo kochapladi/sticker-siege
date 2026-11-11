@@ -92,7 +92,7 @@
   }
   @media (hover: hover) { .btn:hover { background: #3c4d74; } }
   .btn[aria-pressed="true"] { background: var(--ink); box-shadow: inset 0 0 0 2px var(--gold); }
-  .btn:focus-visible, .sticker:focus-visible, .switch:focus-visible, .map-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .btn:focus-visible, .sticker:focus-visible, .switch:focus-visible, .map-btn:focus-visible, .ability:focus-visible, .hero-pick:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
   .btn:disabled { opacity: 0.45; cursor: default; }
   .btn.primary {
     background: var(--gold); color: #3a2800;
@@ -243,15 +243,95 @@
   .keys { color: var(--muted-on-desk); font-size: 15px; line-height: 1.4; margin: 0; }
   .keys kbd { font-family: var(--hand); font-size: 14px; border: 1px solid var(--muted-on-desk); border-radius: 4px; padding: 0 5px; }
 
+  .sticker.hero-st {
+    position: relative; border: 2px solid transparent;
+    background: linear-gradient(#fffdf6, #fffdf6) padding-box, linear-gradient(120deg, #ff9ec4, #ffe14d, #7fe0b0, #8fc1ff, #c89bff) border-box;
+  }
+  .sticker.hero-st .tag { position: absolute; top: 4px; right: 4px; font-family: var(--display); font-size: 11px; color: #fff; background: #b45ccc; border-radius: 6px; padding: 0 5px; letter-spacing: 0.5px; }
+  .sticker.hero-st.placed .cost { background: #e6f6ec; color: #2f8a4c; font-family: var(--hand); font-size: 14px; }
+  .abilities { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .ability {
+    font: inherit; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 8px; align-items: center;
+    text-align: left; border: 2px solid var(--line); border-radius: 12px; padding: 6px 8px; min-height: 56px;
+    color: var(--ink); cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(to right, rgba(36,53,127,0.18) calc(var(--cd, 0) * 100%), transparent 0), #fff;
+  }
+  .ability canvas { grid-row: span 2; width: 40px; height: 40px; }
+  .ability .an { font-family: var(--display); font-size: 15px; line-height: 1.1; min-width: 0; }
+  .ability .as { font-size: 14px; color: var(--muted); line-height: 1.1; }
+  .ability.ready { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,183,41,0.35); }
+  .ability.ready .as { color: #2f8a4c; }
+  .ability:disabled { opacity: 0.6; cursor: default; }
+  @media (prefers-reduced-motion: no-preference) { .ability.ready { animation: glowpulse 1.4s ease-in-out infinite; } }
+  @keyframes glowpulse { 50% { box-shadow: 0 0 0 7px rgba(245,183,41,0.12); } }
+  .heroes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  .hero-pick {
+    font: inherit; display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 8px; align-items: center;
+    text-align: left; background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 6px 8px;
+    color: var(--graphite); cursor: pointer; min-width: 0;
+  }
+  .hero-pick canvas { width: 52px; height: 52px; grid-row: span 3; }
+  .hero-pick b { font-family: var(--display); font-weight: 400; color: var(--ink); font-size: 16px; line-height: 1.1; }
+  .hero-pick span { font-size: 14px; color: var(--muted); line-height: 1.15; }
+  .hero-pick[aria-pressed="true"] { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,183,41,0.35); background: #fffaf0; }
+  .upanel {
+    position: absolute; top: 8px; bottom: 8px; width: min(290px, 46%); z-index: 5;
+    background: rgba(253,252,247,0.97); color: var(--graphite);
+    border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    padding: 10px; display: flex; flex-direction: column; gap: 8px; overflow: auto;
+  }
+  .upanel.left { left: 8px; } .upanel.right { right: 8px; }
+  .up-head { display: flex; align-items: center; gap: 8px; }
+  .up-head canvas { width: 40px; height: 40px; flex: none; }
+  .up-head b { font-family: var(--display); font-weight: 400; color: var(--ink); font-size: 18px; line-height: 1.1; flex: 1; min-width: 0; }
+  .up-close { font: inherit; font-size: 15px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; padding: 4px 10px; min-height: 36px; cursor: pointer; }
+  .up-stats { font-size: 14px; color: var(--muted); line-height: 1.25; }
+  .up-path { border: 1.5px solid var(--line); border-radius: 10px; padding: 6px 8px; display: grid; gap: 5px; background: #fff; }
+  .up-path .pn { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 14px; color: var(--ink); }
+  .pips { display: flex; gap: 3px; }
+  .pips i { width: 13px; height: 8px; border-radius: 2px; background: #dfe3ea; }
+  .pips i.on { background: #2f8a4c; }
+  .up-buy { font: inherit; text-align: left; border: 0; border-radius: 8px; padding: 6px 9px; background: #2f8a4c; color: #fff; cursor: pointer; display: grid; gap: 1px; min-height: 44px; touch-action: manipulation; }
+  .up-buy b { font-family: var(--display); font-weight: 400; font-size: 15px; line-height: 1.15; }
+  .up-buy span { font-size: 13px; line-height: 1.2; opacity: 0.92; }
+  .up-buy.poor { background: #a9b0bf; }
+  .up-note { font-size: 13px; color: var(--muted); line-height: 1.25; }
+  .up-note.done { color: #2f8a4c; font-weight: 600; }
+  .up-sell { font: inherit; font-size: 15px; border: 1.5px solid var(--danger); color: var(--danger); background: #fff; border-radius: 8px; padding: 6px 10px; min-height: 40px; cursor: pointer; margin-top: auto; }
+  .up-buy:focus-visible, .up-sell:focus-visible, .up-close:focus-visible, .ub-cell:focus-visible, .ub-tab:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .ub-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ub-tab { font: inherit; font-size: 14px; display: inline-flex; align-items: center; gap: 4px; background: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 2px 10px 2px 4px; color: var(--ink); cursor: pointer; position: relative; min-height: 36px; }
+  .ub-tab canvas { width: 28px; height: 28px; }
+  .ub-tab[aria-pressed="true"] { border-color: var(--gold); background: #fffaf0; }
+  .ub-tab .dot { position: absolute; top: 0; right: 2px; width: 9px; height: 9px; border-radius: 50%; background: var(--danger); }
+  .ub-grid { display: grid; gap: 10px; }
+  .ub-path { display: grid; gap: 4px; }
+  .ub-pn { font-family: var(--display); color: var(--ink); font-size: 15px; }
+  .ub-cells { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .ub-cell { font: inherit; display: grid; gap: 2px; align-content: start; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 8px; padding: 5px; color: var(--graphite); min-width: 0; }
+  .ub-cell b { font-size: 13px; line-height: 1.1; color: var(--ink); font-weight: 600; }
+  .ub-cell span { font-size: 11.5px; line-height: 1.15; color: var(--muted); }
+  .ub-cell em { font-style: normal; font-size: 12px; font-weight: 600; margin-top: 2px; }
+  .ub-cell.on { background: #eef9f1; border-color: #a8dcb9; }
+  .ub-cell.on em { color: #2f8a4c; }
+  .ub-cell.can { border-color: var(--gold); background: #fffaf0; cursor: pointer; }
+  .ub-cell.can em { color: #8a5d00; }
+  .ub-cell.next em { color: var(--muted); }
+  .ub-cell.locked { opacity: 0.55; }
+  .ub-cell:disabled { cursor: default; }
   .play { display: grid; gap: 12px; align-items: start; }
   /* iPad landscape (and wide desktop windows): board on the left, sticker sheet and controls in a sidebar */
   @media (min-width: 900px) and (orientation: landscape) {
     :root { --chrome: 100px; }
     .app { max-width: 1500px; }
-    .play { grid-template-columns: minmax(0, 1fr) 300px; }
+    .play { grid-template-columns: minmax(0, 1fr) 330px; }
     .bar { grid-template-columns: minmax(0, 1fr); }
-    .sheet { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .sticker canvas { width: 52px; height: 52px; }
+    .sheet { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 8px; }
+    .sticker { padding: 4px 2px; }
+    .sticker canvas { width: 44px; height: 44px; }
+    .sticker .nm { font-size: 14px; }
+    .sticker .cost { font-size: 13px; padding: 0 6px; }
+    .info { min-height: 0; }
     .controls > .btn { flex: 1 1 100%; }
   }
   @media (hover: none) { .keys { display: none; } }
@@ -284,10 +364,13 @@
   <div class="play">
   <div class="stage" id="stage">
     <canvas id="game" aria-label="Game board: a paper page with a pencil road"></canvas>
+    <div class="upanel right" id="upanel" hidden></div>
     <div class="overlay" id="overlay">
       <div class="card" id="startCard">
         <h2>Doodles are marching on your homework</h2>
         <p>Peel stickers off the sheet and slap them beside the pencil road. Every doodle that reaches the end costs you a life.</p>
+        <h3>Pick a hero</h3>
+        <div class="heroes" id="startHeroes"></div>
         <h3>Pick a page</h3>
         <div class="maps" id="startMaps"></div>
         <p class="small">Tap a placed sticker to give it a foil upgrade or peel it off. Settings and your sticker book live in the menu.</p>
@@ -314,11 +397,12 @@
           <button class="btn sell" id="sellBtn" type="button">Peel off</button>
         </div>
       </div>
+      <div class="abilities" id="abilities" hidden></div>
       <div class="controls">
         <button class="btn primary" id="waveBtn" type="button">Start wave 1</button>
         <button class="btn" id="autoBtn" type="button" aria-pressed="false">Auto-start: off</button>
       </div>
-      <p class="keys"><kbd>1</kbd>–<kbd>7</kbd> pick sticker · <kbd>Space</kbd> next wave · <kbd>A</kbd> auto-start · <kbd>U</kbd> upgrade · <kbd>Backspace</kbd> peel off · <kbd>M</kbd> menu · <kbd>Esc</kbd> cancel</p>
+      <p class="keys"><kbd>1</kbd>–<kbd>7</kbd> pick sticker · <kbd>H</kbd> hero · <kbd>Q</kbd> <kbd>E</kbd> hero powers · <kbd>Space</kbd> next wave · <kbd>A</kbd> auto-start · <kbd>,</kbd> <kbd>.</kbd> <kbd>/</kbd> upgrade paths · <kbd>Backspace</kbd> peel off · <kbd>M</kbd> menu · <kbd>Esc</kbd> cancel</p>
     </div>
   </div>
   </div>
@@ -342,8 +426,19 @@
       <p class="small">Visual effects covers bursts, splats, trails, screen shake and hit words. Turn it off if the game feels slow on an older phone.</p>
     </section>
     <section>
+      <h3>Hero</h3>
+      <div class="heroes" id="menuHeroes"></div>
+      <p class="small" id="heroNote"></p>
+    </section>
+    <section>
       <h3>New game</h3>
       <div class="maps" id="menuMaps"></div>
+    </section>
+    <section>
+      <h3>Upgrade book <small id="ubXp"></small></h3>
+      <p class="small">Stickers earn XP for every wave they spend on the page. Spend it here to unlock tiers 3, 4 and 5 of each upgrade path. Tiers 1 and 2 are always open.</p>
+      <div class="ub-tabs" id="ubTabs"></div>
+      <div class="ub-grid" id="ubGrid"></div>
     </section>
     <section>
       <h3>Sticker book <small id="bookCount"></small></h3>
@@ -362,12 +457,12 @@
   let W = 900, H = 560, portrait = false, mapId = "notebook", paths = [];
   const MAPS = {
     notebook: {
-      name: "Notebook page", style: "notebook", startCoins: 120,
+      name: "Notebook page", style: "notebook", startCoins: 200,
       blurb: "One long winding pencil road.",
       paths: [[[-40,110],[200,110],[200,300],[100,300],[100,470],[420,470],[420,190],[620,190],[620,420],[790,420],[790,90],[940,90]]],
     },
     crossword: {
-      name: "Crossword", style: "crossword", startCoins: 150,
+      name: "Crossword", style: "crossword", startCoins: 230,
       blurb: "Two roads that merge halfway.",
       unlock: { map: "notebook", wave: 5 },
       paths: [
@@ -429,6 +524,180 @@
                perks: ["Nearby stickers fire 15% faster", "Nearby stickers fire 25% faster", "Wings: 35% faster and 25% more damage"] },
   };
   const ORDER = ["star", "rainbow", "snow", "rocket", "zap", "sun", "heart"];
+  const FIRE = ["#ff5d2a", "#ff8a3d", "#ffb03b", "#ffd23f"];
+
+  // ---------- Upgrade paths: 3 per sticker, 5 tiers each ----------
+  // Rule: one path may reach tier 5, one other path tier 2. Tiers 3-5 must be unlocked with that sticker's XP.
+  const TIER_COST = [0.6, 0.9, 2.2, 4.5, 11];
+  const XP_COST = [0, 0, 150, 400, 1000];
+  const PATHS = {
+    star: [
+      { name: "Sharp Points", ups: [
+        ["Pointy Tips", "+3 damage", { dmg: 3 }],
+        ["Steel Tips", "+4 damage, cuts through armor", { dmg: 4, pierce: true }],
+        ["Bouncing Stars", "Each star bounces to another doodle", { bounce: 1 }],
+        ["Shooting Star", "Bounces 3 times, +8 damage", { bounce: 3, dmg: 8 }],
+        ["Supernova", "Every 6th star explodes like a tiny sun", { nova: true, dmg: 10 }] ] },
+      { name: "Fast Hands", ups: [
+        ["Quick Peel", "Throws 15% faster", { rate: 0.85 }],
+        ["Quicker Peel", "Throws 15% faster again", { rate: 0.85 }],
+        ["Twin Stars", "Throws two stars at once", { shots: 2 }],
+        ["Star Storm", "Three stars, even faster", { shots: 3, rate: 0.8 }],
+        ["Constellation", "A fan of five stars, very fast", { shots: 5, rate: 0.75 }] ] },
+      { name: "Far Sight", ups: [
+        ["Long Reach", "+20 range", { range: 20 }],
+        ["Eagle Eye", "+25 range", { range: 25 }],
+        ["Homing Glitter", "Stars fly faster and never miss", { homing: true }],
+        ["Sniper Star", "+60 range, +12 damage", { range: 60, dmg: 12 }],
+        ["North Star", "Huge range, double damage, 25% critical hits", { range: 100, dmgMul: 2, crit: 0.25 }] ] },
+    ],
+    rainbow: [
+      { name: "Big Splash", ups: [
+        ["Bigger Blobs", "+15 splash size", { splash: 15 }],
+        ["Heavy Paint", "+8 damage", { dmg: 8 }],
+        ["Paint Puddle", "Leaves a puddle that keeps hurting", { puddle: 1 }],
+        ["Flood", "Bigger puddles that hurt twice as much", { puddle: 2, splash: 15 }],
+        ["Rainbow Tsunami", "Every 4th throw is a giant rainbow wave", { tsunami: true, dmg: 15 }] ] },
+      { name: "Quick Brush", ups: [
+        ["Fast Brush", "Throws 15% faster", { rate: 0.85 }],
+        ["Faster Brush", "Throws 15% faster again", { rate: 0.85 }],
+        ["Double Rainbow", "Throws two blobs", { blobs: 2 }],
+        ["Triple Rainbow", "Throws three blobs", { blobs: 3 }],
+        ["Paint Cannon", "Throws twice as fast", { rate: 0.5 }] ] },
+      { name: "Colour Magic", ups: [
+        ["Sticky Paint", "Painted doodles slow down", { sticky: 0.75 }],
+        ["Stickier Paint", "Painted doodles slow down more", { sticky: 0.55 }],
+        ["Long Toss", "+40 range", { range: 40 }],
+        ["Prism Paint", "Paint strips armor off doodles", { prism: true }],
+        ["Spectrum", "Painted doodles take 50% more damage from everything", { spectrum: true }] ] },
+    ],
+    snow: [
+      { name: "Deep Cold", ups: [
+        ["Colder", "Stronger slow", { slow: 0.45 }],
+        ["Colder Still", "Even stronger slow", { slow: 0.35 }],
+        ["Deep Freeze", "Every third pulse freezes doodles solid", { freezeEvery: 3 }],
+        ["Permafrost", "Freezes every other pulse, for longer", { freezeEvery: 2, freezeDur: 1.3 }],
+        ["Absolute Zero", "Freezes every pulse; frozen doodles take double damage", { freezeEvery: 1, brittle: true }] ] },
+      { name: "Ice Shards", ups: [
+        ["Sharp Frost", "+3 damage", { dmg: 3 }],
+        ["Icicles", "+5 damage", { dmg: 5 }],
+        ["Shard Burst", "Each pulse fires 4 ice shards", { shards: 4 }],
+        ["Hailstorm", "8 shards, +6 damage", { shards: 8, dmg: 6 }],
+        ["Ice Comet", "Every 5 seconds a comet hits the toughest doodle in range", { comet: true }] ] },
+      { name: "Wide Chill", ups: [
+        ["Wider Chill", "+15 range", { range: 15 }],
+        ["Wider Still", "+20 range", { range: 20 }],
+        ["Quick Chill", "Pulses 30% faster", { rate: 0.7 }],
+        ["Cool Breeze", "Nearby stickers fire 15% faster", { chillAura: true }],
+        ["Winter Wonderland", "+60 range, slows bosses fully", { range: 60, bossFull: true }] ] },
+    ],
+    rocket: [
+      { name: "Bigger Boom", ups: [
+        ["More Fuel", "+15 damage", { dmg: 15 }],
+        ["Big Warhead", "+30 damage, bigger blast", { dmg: 30, blast: 15 }],
+        ["Cluster Bombs", "Scatters 3 mini bombs", { bomblets: 3 }],
+        ["Mega Cluster", "6 stronger mini bombs", { bomblets: 6, bombletMul: 1.6 }],
+        ["Moon Shot", "Gigantic blast, triple damage", { moon: true, dmgMul: 3, blast: 60 }] ] },
+      { name: "Rapid Launch", ups: [
+        ["Quick Reload", "Fires 15% faster", { rate: 0.85 }],
+        ["Quicker Reload", "Fires 15% faster again", { rate: 0.85 }],
+        ["Twin Rockets", "Fires two rockets", { rockets: 2 }],
+        ["Rocket Barrage", "Fires four rockets", { rockets: 4 }],
+        ["Rocket Swarm", "Six rockets, twice as often", { rockets: 6, rate: 0.5 }] ] },
+      { name: "Smart Rockets", ups: [
+        ["Longer Range", "+40 range", { range: 40 }],
+        ["Better Guidance", "Faster, sharper-turning rockets", { fast: true }],
+        ["Stun Rockets", "Blasts stun doodles", { rstun: 0.5 }],
+        ["Napalm", "Blasts leave burning ground", { napalm: true }],
+        ["Orbital Strike", "Every 8 seconds a laser hits the toughest doodle", { orbital: true }] ] },
+    ],
+    zap: [
+      { name: "Long Chains", ups: [
+        ["Longer Chain", "Chains to 1 more doodle", { chains: 1 }],
+        ["Even Longer", "Chains to 1 more doodle", { chains: 1 }],
+        ["Storm Cloud", "Chains to 3 more, loses less power per jump", { chains: 3, falloff: 0.95 }],
+        ["Super Chain", "Chains to 3 more", { chains: 3 }],
+        ["Thunderstorm", "Every 4 seconds lightning strikes 6 doodles anywhere", { thunder: true }] ] },
+      { name: "High Voltage", ups: [
+        ["Charged", "+6 damage", { dmg: 6 }],
+        ["Supercharged", "+8 damage", { dmg: 8 }],
+        ["Stun Bolt", "Bolts stun doodles", { zstun: 0.45 }],
+        ["Overcharge", "60% more damage, longer stun", { dmgMul: 1.6, zstun: 0.7 }],
+        ["Ball Lightning", "Every 3rd bolt also sends a crackling orb", { orb: true, dmgMul: 1.3 }] ] },
+      { name: "Quick Spark", ups: [
+        ["Quick Spark", "Zaps 15% faster", { rate: 0.85 }],
+        ["Quicker Spark", "Zaps 15% faster again", { rate: 0.85 }],
+        ["Long Arc", "+30 range", { range: 30 }],
+        ["Static Field", "Doodles in range move 20% slower", { staticField: true }],
+        ["Tesla Coil", "Zaps more than twice as fast", { rate: 0.4 }] ] },
+    ],
+    sun: [
+      { name: "Hotter", ups: [
+        ["Warm Lens", "+4 damage", { dmg: 4 }],
+        ["Hot Lens", "+6 damage", { dmg: 6 }],
+        ["Quick Heat", "Heats up twice as fast", { heat: 2 }],
+        ["Melt", "Gets much hotter at full heat", { maxHeat: 3 }],
+        ["Solar Flare", "Beam does 2.5x damage", { dmgMul: 2.5 }] ] },
+      { name: "More Lenses", ups: [
+        ["Wider Lens", "+15 range", { range: 15 }],
+        ["Wide Lens", "+15 range", { range: 15 }],
+        ["Twin Beam", "Two beams", { beams: 2 }],
+        ["Triple Beam", "Three beams", { beams: 3 }],
+        ["Prism Array", "Five beams", { beams: 5 }] ] },
+      { name: "Burn", ups: [
+        ["Scorch", "Doodles keep burning for 2 seconds", { burn: 0.3 }],
+        ["Hot Coals", "Burning hurts twice as much", { burn: 0.6 }],
+        ["Wildfire", "Burning doodles spread fire when popped", { wildfire: true }],
+        ["Fire Trail", "The beam leaves burning ground", { trail: true }],
+        ["Sunburst", "Every 6 seconds a blast hits everything in range", { sunburst: true }] ] },
+    ],
+    heart: [
+      { name: "Love Boost", ups: [
+        ["Warm Heart", "Nearby stickers fire 18% faster", { haste: 1 / 1.18 }],
+        ["Big Love", "25% faster", { haste: 1 / 1.25 }],
+        ["Sweetheart", "35% faster", { haste: 1 / 1.35 }],
+        ["Lovestruck", "45% faster, 10% more damage", { haste: 1 / 1.45, dmgBuff: 1.1 }],
+        ["True Love", "60% faster, 30% more damage", { haste: 1 / 1.6, dmgBuff: 1.3 }] ] },
+      { name: "Big Heart", ups: [
+        ["Bigger Heart", "+20 range", { range: 20 }],
+        ["Huge Heart", "+25 range", { range: 25 }],
+        ["Reach Out", "Nearby stickers get 15% more range", { rangeBuff: 1.15 }],
+        ["Courage", "Nearby stickers hit 20% harder", { dmgBuff: 1.2 }],
+        ["Heart of Gold", "Doodles popped nearby drop 2 extra glitter", { goldHeart: true }] ] },
+      { name: "Cheer", ups: [
+        ["Cheer Up", "Smudged or snipped stickers nearby recover twice as fast", { cheer: true }],
+        ["Bodyguard", "Nearby stickers can't be smudged or snipped", { guard: true }],
+        ["Pep Talk", "+20 glitter every wave", { waveGlitter: 20 }],
+        ["Love Letter", "+40 more glitter every wave", { waveGlitter: 40 }],
+        ["Life Saver", "+1 life every wave", { lifeWave: 1 }] ] },
+    ],
+  };
+  const BASE_EXTRA = {
+    star: { shots: 1, bounce: 0 }, rainbow: { blobs: 1 }, snow: { slow: 0.55, freezeEvery: 0, freezeDur: 0.9 },
+    rocket: { rockets: 1, blast: 30, bombletMul: 1 }, zap: { chains: 3, falloff: 0.85 }, sun: { heat: 1, maxHeat: 2, beams: 1 },
+    heart: { haste: 1 / 1.15, dmgBuff: 1, rangeBuff: 1, waveGlitter: 0, lifeWave: 0 },
+  };
+  const ADD_KEYS = new Set(["dmg", "range", "splash", "chains", "blast", "waveGlitter", "lifeWave"]);
+  const MUL_KEYS = new Set(["dmgMul", "rate", "heat", "bombletMul"]);
+  function getStats(t) {
+    const b = TYPES[t.type];
+    const s = { range: b.range, rate: b.rate, dmg: b.dmg, splash: b.splash || 0, dmgMul: 1, ...(BASE_EXTRA[t.type] || {}) };
+    const P = PATHS[t.type];
+    if (P && t.paths) t.paths.forEach((tier, pi) => {
+      for (let k = 0; k < tier; k++) {
+        const m = P[pi].ups[k][2];
+        for (const key in m) {
+          if (ADD_KEYS.has(key)) s[key] = (s[key] || 0) + m[key];
+          else if (MUL_KEYS.has(key)) s[key] = (s[key] || 1) * m[key];
+          else s[key] = m[key];
+        }
+      }
+    });
+    s.dmg *= s.dmgMul;
+    return s;
+  }
+  const artLevel = (t) => { const m = Math.max(...(t.paths || [0])); return m >= 5 ? 3 : m >= 3 ? 2 : 1; };
+  const tierCost = (type, tier) => Math.round(TYPES[type].cost * TIER_COST[tier - 1] / 5) * 5;
   const RAINBOW = ["#ff5a5f", "#ffa23b", "#ffe14d", "#5bd77a", "#4aa8ff", "#9b6bff"];
   function stats(type, lvl) {
     const b = TYPES[type];
@@ -444,8 +713,42 @@
       heatRate: [0.55, 1.1, 1.1][lvl - 1],
     };
   }
-  const upgradeCost = (t) => Math.round(TYPES[t.type].cost * (t.level === 1 ? 0.8 : 1.3));
   const refund = (t) => Math.round(t.spent * 0.6);
+
+  // ---------- Heroes ----------
+  const HEROES = {
+    sparkle: { name: "Sparkle", role: "Unicorn who fires rainbow bolts", cost: 110,
+      abilities: [{ name: "Glitter Storm", lvl: 3, cd: 30, desc: "glitter rains on every doodle on the page" },
+                  { name: "Wishing Star", lvl: 7, cd: 45, desc: "a giant star crashes into the toughest doodle" }],
+      levels: { 2: "Longer range", 3: "Learned Glitter Storm", 4: "Bolts burst on impact", 5: "Shoots faster", 6: "Harder bolts",
+                7: "Learned Wishing Star", 8: "Triple bolts and a glowing horn", 9: "Shoots even faster", 10: "Rainbow mane: 50% more damage" } },
+    rex: { name: "Rex", role: "Dinosaur who stomps everything nearby", cost: 125,
+      abilities: [{ name: "Big Roar", lvl: 3, cd: 35, desc: "blasts nearby doodles back down the road and scares them slow" },
+                  { name: "Meteor Shower", lvl: 7, cd: 50, desc: "six meteors smash into doodles" }],
+      levels: { 2: "Bigger stomp", 3: "Learned Big Roar", 4: "Stomps stun", 5: "Stomps faster", 6: "Even bigger stomp",
+                7: "Learned Meteor Shower", 8: "Heavier stomp", 9: "Stomps faster", 10: "Golden Rex: double stomp" } },
+    hoot: { name: "Professor Hoot", role: "Owl who throws pencils and boosts nearby stickers", cost: 95,
+      abilities: [{ name: "Pop Quiz", lvl: 3, cd: 40, desc: "every doodle on the page stops to think" },
+                  { name: "Gold Star Day", lvl: 7, cd: 55, desc: "all stickers fire twice as fast for 8 seconds" }],
+      levels: { 2: "Nearby stickers get 10% more range", 3: "Learned Pop Quiz", 4: "Extra glitter every wave", 5: "Nearby stickers hit 10% harder",
+                6: "Throws two pencils", 7: "Learned Gold Star Day", 8: "Sharper pencils", 9: "Nearby stickers get 20% more range",
+                10: "Golden Professor: double glitter, faster pencils" } },
+  };
+  function heroStats(id, L) {
+    if (id === "sparkle") return { dmg: (12 + 3 * L + (L >= 6 ? 6 : 0)) * (L >= 10 ? 1.5 : 1), rate: L >= 9 ? 0.37 : L >= 5 ? 0.45 : 0.55,
+      range: 130 + (L >= 2 ? 15 : 0), splash: L >= 4 ? 24 : 0, shots: L >= 8 ? 3 : 1 };
+    if (id === "rex") return { dmg: (16 + 4 * L + (L >= 8 ? 15 : 0)) * (L >= 10 ? 1.3 : 1), rate: L >= 9 ? 0.95 : L >= 5 ? 1.15 : 1.4,
+      range: L >= 10 ? 110 : L >= 6 ? 95 : L >= 2 ? 82 : 72, stun: L >= 4 ? 0.3 : 0, double: L >= 10 };
+    return { dmg: 9 + 2 * L + (L >= 8 ? 8 : 0), rate: L >= 10 ? 0.5 : 0.7, range: 125, shots: L >= 6 ? 2 : 1, aura: 115,
+      rangeBuff: L >= 9 ? 1.2 : L >= 2 ? 1.1 : 1, dmgBuff: L >= 5 ? 1.1 : 1, waveGlitter: L >= 4 ? 5 * L * (L >= 10 ? 2 : 1) : 0 };
+  }
+  const xpNeed = (L) => Math.round(40 * Math.pow(L, 1.5));
+  let heroId = "sparkle";
+  TYPES.hero = { name: "", cost: 0, range: 0, rate: 0, dmg: 0, desc: "", perks: ["", "", ""] };
+  function setHeroType(id) {
+    const h = HEROES[id];
+    Object.assign(TYPES.hero, { name: h.name, cost: h.cost, range: heroStats(id, 1).range, desc: `${h.role}. Levels up by itself. One hero per game.` });
+  }
 
   const ENEMIES = {
     scribble:    { hp: 28,  speed: 52,  reward: 4,  r: 14 },
@@ -504,7 +807,9 @@
     { id: "first",  name: "First wave",     desc: "Clear wave 1",                          art: "star",    lvl: 1 },
     { id: "perfect",name: "Spotless",       desc: "Clear wave 3 or later without losing a life", art: "snow", lvl: 1 },
     { id: "full",   name: "Full sheet",     desc: "Have four kinds of sticker on the page", art: "rainbow", lvl: 1 },
-    { id: "gold",   name: "Gold standard",  desc: "Upgrade a sticker to gold foil",        art: "star",    lvl: 3 },
+    { id: "gold",   name: "Gold standard",  desc: "Buy a tier 4 upgrade",                  art: "star",    lvl: 3 },
+    { id: "tier5",  name: "Masterpiece",    desc: "Buy a tier 5 upgrade",                  art: "rocket",  lvl: 3 },
+    { id: "unlock", name: "Bookworm",       desc: "Unlock an upgrade in the Upgrade book", art: "sun",     lvl: 2 },
     { id: "splash", name: "Splash zone",    desc: "Hit 5 doodles with one rainbow",        art: "rainbow", lvl: 2 },
     { id: "early",  name: "Eager beaver",   desc: "Call a wave early",                     art: "rocket",  lvl: 1 },
     { id: "eraser", name: "Rubbed out",     desc: "Defeat an eraser",                      art: "snow",    lvl: 2 },
@@ -514,26 +819,44 @@
     { id: "chain",  name: "Chain reaction", desc: "Hit 6 doodles with one lightning bolt", art: "zap",     lvl: 3 },
     { id: "blot",   name: "Ink spill",      desc: "Split an ink blot",                     art: "sun",     lvl: 1 },
     { id: "snip",   name: "Cut short",      desc: "Defeat the scissors",                   art: "heart",   lvl: 3 },
+    { id: "showtime", name: "Showtime",     desc: "Use a hero power",                      art: "zap",     lvl: 2 },
+    { id: "legend", name: "Legend",         desc: "Get a hero to level 10",                art: "star",    lvl: 3 },
   ];
 
   // ---------- Settings & progress (per browser) ----------
-  const settings = { sound: true, vfx: true, nums: true, auto: false, speed: 1 };
-  const prog = { best: { notebook: 0, crossword: 0 }, badges: {} };
+  const settings = { sound: true, vfx: true, nums: true, auto: false, speed: 1, hero: "sparkle" };
+  const prog = { best: { notebook: 0, crossword: 0 }, badges: {}, txp: {}, unl: {} };
   try { Object.assign(settings, JSON.parse(localStorage.getItem("stickerSiegeSettings") || "{}")); } catch (e) {}
   try {
     const p = JSON.parse(localStorage.getItem("stickerSiegeProgress") || "null");
-    if (p) { Object.assign(prog.best, p.best || {}); Object.assign(prog.badges, p.badges || {}); }
+    if (p) { Object.assign(prog.best, p.best || {}); Object.assign(prog.badges, p.badges || {}); Object.assign(prog.txp, p.txp || {}); Object.assign(prog.unl, p.unl || {}); }
     else prog.best.notebook = parseInt(localStorage.getItem("stickerSiegeBest") || "0", 10) || 0;
   } catch (e) {}
   const saveSettings = () => { try { localStorage.setItem("stickerSiegeSettings", JSON.stringify(settings)); } catch (e) {} };
   const saveProg = () => { try { localStorage.setItem("stickerSiegeProgress", JSON.stringify(prog)); } catch (e) {} };
   const isUnlocked = (id) => !MAPS[id].unlock || (prog.best[MAPS[id].unlock.map] || 0) >= MAPS[id].unlock.wave;
+  const unlockedTier = (type, pi) => (prog.unl[type] || [2, 2, 2])[pi];
+  const unlockCost = (type, pi) => { const n = unlockedTier(type, pi) + 1; return n <= 5 ? XP_COST[n - 1] : 0; };
+  const canUnlockAny = (type) => [0, 1, 2].some((pi) => unlockedTier(type, pi) < 5 && (prog.txp[type] || 0) >= unlockCost(type, pi));
+  function pathState(t, pi) {
+    const tier = t.paths[pi];
+    if (tier >= 5) return { kind: "max" };
+    const others = t.paths.filter((v, i) => i !== pi);
+    if (tier === 0 && others.filter((v) => v > 0).length >= 2) return { kind: "closed" };
+    if (tier >= 2 && others.some((v) => v > 2)) return { kind: "closed" };
+    const next = tier + 1;
+    if (unlockedTier(t.type, pi) < next) return { kind: "locked", tier: next };
+    return { kind: "buy", tier: next, cost: tierCost(t.type, next) };
+  }
+  if (!HEROES[settings.hero]) settings.hero = "sparkle";
+  heroId = settings.hero; setHeroType(heroId);
   const reduced = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
 
   // ---------- Game state ----------
   let coins, lives, wave, waveActive, queue, waveTime, spawnN, autoT, lostThisWave;
   let towers = [], enemies = [], shots = [], parts = [], texts = [], decals = [], bolts = [], zones = [], newborn = [];
-  let seen = {};
+  let seen = {}, xpHinted = false;
+  let timers = [], clock = 0, stormT = 0, stormTick = 0, stormDmg = 0, frenzyT = 0, quizFlash = 0;
   let shake = 0, vignette = 0, lastWord = 0, hitstop = 0;
   let started = false, over = false, won = false, paused = false, menuOpen = false;
   let placing = null, selected = null;
@@ -546,8 +869,10 @@
     coins = MAPS[mapId].startCoins; lives = 20; wave = 0; waveActive = false; queue = []; waveTime = 0;
     spawnN = 0; autoT = 0; lostThisWave = false;
     towers = []; enemies = []; shots = []; parts = []; texts = []; decals = []; bolts = []; zones = []; newborn = []; seen = {};
+    timers = []; clock = 0; stormT = 0; frenzyT = 0; quizFlash = 0; xpHinted = false;
     shake = 0; vignette = 0; hitstop = 0;
     over = false; won = false; placing = null; selected = null;
+    heroId = settings.hero; setHeroType(heroId); refreshHeroButton();
     sizeStage();
     renderBg();
   }
@@ -612,6 +937,16 @@
       case "snip": noise(0.06, 0.25, 6500); noise(0.06, 0.25, 5000); tone(1800, 0.08, "square", 0.02, 0.5); break;
       case "freeze": tone(2400, 0.4, "sine", 0.04, 0.4); noise(0.3, 0.12, 5000); break;
       case "shatter": noise(0.12, 0.15, 6000); tone(3000, 0.06, "triangle", 0.03, 0.6); break;
+      case "levelup": [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, 0.22, "triangle", 0.06, 1, i * 0.07)); break;
+      case "storm": for (let i = 0; i < 8; i++) tone(1800 + Math.random() * 1600, 0.15, "sine", 0.025, 1, i * 0.05); break;
+      case "wish": noise(0.6, 0.12, 2500); tone(400, 0.6, "sine", 0.05, 3); break;
+      case "roar": tone(180, 0.7, "sawtooth", 0.08, 0.35); noise(0.6, 0.2, 300); break;
+      case "meteor": noise(0.4, 0.1, 900); tone(600, 0.4, "sine", 0.03, 0.3); break;
+      case "quiz": tone(988, 0.25, "sine", 0.07); tone(784, 0.4, "sine", 0.07, 1, 0.22); break;
+      case "goldday": [784, 988, 1175, 1568, 1976].forEach((f, i) => tone(f, 0.2, "square", 0.025, 1, i * 0.06)); break;
+      case "stomp": tone(80, 0.25, "sine", 0.2, 0.6); noise(0.15, 0.15, 180); break;
+      case "pencil": noise(0.05, 0.08, 3000); break;
+      case "hbolt": tone(1600, 0.06, "triangle", 0.02, 1.6); break;
       case "pop": tone(320, 0.09, "triangle", 0.05, 0.45); break;
       case "leak": tone(170, 0.4, "sawtooth", 0.05, 0.5); break;
       case "wave": tone(440, 0.12, "triangle", 0.06); tone(660, 0.18, "triangle", 0.06, 1, 0.12); break;
@@ -950,6 +1285,118 @@
     c.restore();
   }
 
+  // ---------- Hero art ----------
+  const HERO_BG = { sparkle: "#f4e8ff", rex: "#e3f7e1", hoot: "#fff1dc" };
+  const HERO_GLOW = { sparkle: "255,158,196", rex: "120,200,90", hoot: "255,190,90" };
+  function drawHero(c, id, x, y, s, L, rot, lift, alpha = 1) {
+    const now = performance.now() / 1000, RR = R * 1.1;
+    c.save(); c.globalAlpha = alpha; c.translate(x, y); c.rotate(rot); c.scale(s, s);
+    if (L >= 8) {
+      c.save(); c.rotate(now * 0.5);
+      c.fillStyle = L >= 10 ? "rgba(255,205,60,0.6)" : `rgba(${HERO_GLOW[id]},0.5)`;
+      for (let k = 0; k < 12; k++) { c.rotate(Math.PI / 6); c.beginPath(); c.moveTo(-4, RR); c.lineTo(0, RR + 13 + (k % 2) * 6); c.lineTo(4, RR); c.closePath(); c.fill(); }
+      c.restore();
+    }
+    c.fillStyle = `rgba(30,32,48,${0.22 + lift * 0.015})`; c.beginPath(); c.arc(lift * 0.5, 1.5 + lift, RR + 4.5, 0, 7); c.fill();
+    c.save(); c.rotate(now * 0.9);
+    const hg = c.createLinearGradient(-RR, -RR, RR, RR);
+    ["#ff9ec4", "#ffe14d", "#7fe0b0", "#8fc1ff", "#c89bff", "#ff9ec4"].forEach((col, i) => hg.addColorStop(i / 5, col));
+    c.fillStyle = hg; c.beginPath(); c.arc(0, 0, RR + 4.5, 0, 7); c.fill();
+    c.restore();
+    c.fillStyle = "#fff"; c.beginPath(); c.arc(0, 0, RR + 1.5, 0, 7); c.fill();
+    c.save(); c.beginPath(); c.arc(0, 0, RR, 0, 7);
+    if (L >= 10) { const gg = c.createRadialGradient(-6, -8, 2, 0, 0, RR); gg.addColorStop(0, "#fff6c8"); gg.addColorStop(1, "#f3c13a"); c.fillStyle = gg; }
+    else c.fillStyle = HERO_BG[id];
+    c.fill(); c.clip();
+    heroArt(c, id, L, now);
+    c.restore();
+    if (L >= 10) {
+      c.save(); c.translate(RR * 0.78, -RR * 0.78); c.rotate(now * 1.6); c.fillStyle = "#fff"; c.beginPath();
+      for (let i = 0; i < 8; i++) { const rr = i % 2 ? 2 : 7, a = i * Math.PI / 4; c.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+      c.fill(); c.restore();
+    }
+    c.restore();
+  }
+  function heroArt(c, id, L, now) {
+    c.lineJoin = "round"; c.lineCap = "round";
+    if (id === "sparkle") {
+      const mane = L >= 10 ? RAINBOW : ["#ff9ec4", "#ffb3d4", "#f78fbd", "#ffc6e0"];
+      [[-12, -8, 9], [-16, 3, 8], [-11, 13, 8], [-5, -15, 7], [-18, 13, 6]].forEach(([mx, my, mr], i) => { c.fillStyle = mane[i % mane.length]; c.beginPath(); c.arc(mx, my, mr, 0, 7); c.fill(); });
+      c.fillStyle = "#fbf7ff"; c.strokeStyle = "#b9a6d6"; c.lineWidth = 1.5;
+      c.beginPath(); c.ellipse(2, 3, 12, 15, -0.3, 0, 7); c.fill(); c.stroke();
+      c.beginPath(); c.ellipse(11, 11, 9, 7, -0.25, 0, 7); c.fill(); c.stroke();
+      c.fillStyle = "#b9a6d6"; c.beginPath(); c.arc(16, 10, 1.4, 0, 7); c.fill();
+      c.fillStyle = "#fbf7ff"; c.beginPath(); c.moveTo(-3, -10); c.lineTo(1, -20); c.lineTo(5, -10); c.closePath(); c.fill(); c.stroke();
+      if (L >= 8) { const g = c.createRadialGradient(11, -22, 1, 11, -22, 12); g.addColorStop(0, "rgba(255,255,255,0.95)"); g.addColorStop(1, "rgba(255,170,230,0)"); c.fillStyle = g; c.beginPath(); c.arc(11, -22, 12, 0, 7); c.fill(); }
+      const hg = c.createLinearGradient(6, -12, 14, -28); hg.addColorStop(0, "#f3a21c"); hg.addColorStop(1, "#ffe270");
+      c.fillStyle = hg; c.beginPath(); c.moveTo(5, -11); c.lineTo(14, -29); c.lineTo(10, -10); c.closePath(); c.fill();
+      c.strokeStyle = "#c98a00"; c.lineWidth = 1; c.beginPath(); c.moveTo(6.5, -14); c.lineTo(10.5, -15); c.moveTo(8.5, -19); c.lineTo(11.5, -20); c.moveTo(10.5, -24); c.lineTo(12.5, -24.5); c.stroke();
+      c.strokeStyle = "#3a2a4a"; c.lineWidth = 1.8; c.beginPath(); c.arc(4, 0, 3.2, Math.PI * 1.1, Math.PI * 1.9); c.stroke();
+      c.beginPath(); c.moveTo(1.5, -1.5); c.lineTo(0, -3.5); c.stroke();
+      c.fillStyle = "rgba(255,120,170,0.55)"; c.beginPath(); c.arc(6, 6, 2.6, 0, 7); c.fill();
+      c.fillStyle = mane[0]; c.beginPath(); c.arc(-2, -11, 5, 0, 7); c.fill();
+      if (L >= 4) { c.save(); c.translate(-9, -3); c.rotate(-0.3); starPath(c, 5, 0.45); c.fillStyle = "#ffd23f"; c.fill(); c.restore(); }
+    } else if (id === "rex") {
+      const body = L >= 10 ? "#e8c34a" : "#5fbf5a", dark = L >= 10 ? "#b8902a" : "#3f8f3b";
+      c.fillStyle = L >= 8 ? "#ffb347" : "#f4a340";
+      for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(-15, -10 + i * 7); c.lineTo(-23, -14 + i * 7); c.lineTo(-15, -4 + i * 7); c.closePath(); c.fill(); }
+      if (L >= 8 && settings.vfx) { c.fillStyle = `rgba(255,200,80,${(0.3 + Math.sin(now * 6) * 0.15).toFixed(3)})`; c.beginPath(); c.arc(-19, 0, 10, 0, 7); c.fill(); }
+      c.fillStyle = body; c.strokeStyle = dark; c.lineWidth = 1.6;
+      rrect(c, -16, -16, 34, 26, 12); c.fill(); c.stroke();
+      rrect(c, -8, 4, 26, 11, 5); c.fill(); c.stroke();
+      c.fillStyle = "#fff";
+      for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-3 + i * 4.5, 4); c.lineTo(-1 + i * 4.5, 8); c.lineTo(1 + i * 4.5, 4); c.closePath(); c.fill(); }
+      c.beginPath(); c.arc(3, -6, 5, 0, 7); c.fill(); c.strokeStyle = "#222"; c.lineWidth = 1.2; c.stroke();
+      c.fillStyle = "#111"; c.beginPath(); c.arc(4.5, -6, 2.4, 0, 7); c.fill();
+      c.strokeStyle = dark; c.lineWidth = 2.2; c.beginPath(); c.moveTo(-2, -12.5); c.lineTo(8, -10.5); c.stroke();
+      c.fillStyle = dark; c.beginPath(); c.arc(13, -9, 1.2, 0, 7); c.arc(16, -8, 1.2, 0, 7); c.fill();
+      if (L >= 4) {
+        c.fillStyle = "#e0525b"; rrect(c, -14, 14, 28, 6, 3); c.fill();
+        c.beginPath(); c.moveTo(-6, 17); c.lineTo(-12, 26); c.lineTo(-2, 22); c.closePath(); c.fill();
+        c.fillStyle = "#fff"; c.beginPath(); c.arc(2, 17, 1, 0, 7); c.arc(8, 17, 1, 0, 7); c.fill();
+      }
+      if (L >= 10) {
+        c.save(); c.translate(1, -18);
+        c.beginPath(); c.moveTo(-8, 3); c.lineTo(-9, -5); c.lineTo(-4, -1); c.lineTo(0, -7); c.lineTo(4, -1); c.lineTo(9, -5); c.lineTo(8, 3); c.closePath();
+        c.fillStyle = "#ffd23f"; c.fill(); c.strokeStyle = "#a87400"; c.lineWidth = 1; c.stroke(); c.restore();
+      }
+    } else {
+      const body = L >= 10 ? "#e2b23c" : "#a7754a", face = L >= 10 ? "#fff1c4" : "#e7c9a1";
+      c.fillStyle = body;
+      c.beginPath(); c.moveTo(-16, -8); c.lineTo(-11, -22); c.lineTo(-5, -12); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(16, -8); c.lineTo(11, -22); c.lineTo(5, -12); c.closePath(); c.fill();
+      c.beginPath(); c.arc(0, 4, 19, 0, 7); c.fill();
+      c.fillStyle = face; c.beginPath(); c.arc(-7, 0, 9, 0, 7); c.arc(7, 0, 9, 0, 7); c.fill();
+      c.fillStyle = "rgba(255,255,255,0.9)"; c.beginPath(); c.arc(-7, -1, 6, 0, 7); c.arc(7, -1, 6, 0, 7); c.fill();
+      c.fillStyle = "#222"; c.beginPath(); c.arc(-6, 0, 2.6, 0, 7); c.arc(8, 0, 2.6, 0, 7); c.fill();
+      c.strokeStyle = "#2b2d36"; c.lineWidth = 2;
+      c.beginPath(); c.arc(-7, -1, 6.5, 0, 7); c.moveTo(13.5, -1); c.arc(7, -1, 6.5, 0, 7); c.moveTo(-0.5, -2); c.lineTo(0.5, -2); c.stroke();
+      c.fillStyle = "#f4a340"; c.beginPath(); c.moveTo(-3, 6); c.lineTo(3, 6); c.lineTo(0, 11); c.closePath(); c.fill();
+      c.strokeStyle = "rgba(90,60,30,0.5)"; c.lineWidth = 1.2;
+      for (const [vx, vy] of [[-6, 16], [0, 18], [6, 16]]) { c.beginPath(); c.moveTo(vx - 2.5, vy - 2); c.lineTo(vx, vy); c.lineTo(vx + 2.5, vy - 2); c.stroke(); }
+      if (L >= 4) {
+        c.fillStyle = "#2b2d36"; c.beginPath(); c.moveTo(-17, -15); c.lineTo(0, -22); c.lineTo(17, -15); c.lineTo(0, -8); c.closePath(); c.fill();
+        c.fillRect(-7, -14, 14, 5);
+        c.strokeStyle = "#ffd23f"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(0, -15); c.lineTo(12, -13); c.lineTo(12, -5); c.stroke();
+      }
+      if (L >= 8) { c.save(); c.translate(-14, 18); c.rotate(-0.3); c.fillStyle = "#3d6fd6"; c.fillRect(-6, -4, 12, 8); c.fillStyle = "#fff"; c.fillRect(-5, -3, 10, 2); c.restore(); }
+    }
+  }
+  function drawHeroOnBoard(tw, s, rot, lift) {
+    drawHero(ctx, tw.hero, tw.x, tw.y, s, tw.hlvl, rot, lift);
+    const bx = tw.x + R * 0.95, by = tw.y + R * 0.8;
+    ctx.fillStyle = tw.hlvl >= 10 ? "#e0a800" : "#24357f"; ctx.beginPath(); ctx.arc(bx, by, 10, 0, 7); ctx.fill();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.font = '12px "Bagel Fat One", "Arial Rounded MT Bold", sans-serif';
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(String(tw.hlvl), bx, by + 1);
+    ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    if (tw.hlvl < 10) {
+      const w = 40, y = tw.y + R * 1.32 + 4;
+      ctx.fillStyle = "rgba(255,255,255,0.92)"; ctx.fillRect(tw.x - w / 2 - 1, y - 1, w + 2, 6);
+      ctx.fillStyle = "#b45ccc"; ctx.fillRect(tw.x - w / 2, y, w * Math.min(1, tw.xp / xpNeed(tw.hlvl)), 4);
+    }
+  }
+
   // ---------- Doodle art ----------
   function eyes(c, e, ox, oy, size, angry) {
     angry = angry || e.enraged || e.stunRes > 0;
@@ -1107,7 +1554,7 @@
       c.fillStyle = "rgba(190,230,255,0.55)"; c.fill(); c.strokeStyle = "#7cc4f0"; c.lineWidth = 2; c.stroke();
       c.strokeStyle = "rgba(255,255,255,0.9)"; c.lineWidth = 2;
       c.beginPath(); c.moveTo(-def.r, -def.r + 6); c.lineTo(-def.r + 8, -def.r - 2); c.moveTo(-def.r + 2, -def.r + 14); c.lineTo(-def.r + 16, -def.r); c.stroke();
-    } else if (e.stunT > 0) {
+    } else if (e.stunT > 0 && e.stunKind !== "quiz") {
       c.strokeStyle = "#ffd23f"; c.lineWidth = 1.6;
       for (let k = 0; k < 3; k++) {
         const a = Math.random() * 6.28, r0 = def.r + 2;
@@ -1287,31 +1734,50 @@
     return null;
   }
   function tryPlace(type, x, y) {
+    if (type === "hero" && heroTower()) { say(x, y, "Only one hero per game", "#e0525b"); sfx("nope"); return false; }
     const cost = TYPES[type].cost;
     if (coins < cost) { say(x, y, `Need ${cost - coins} more glitter`, "#e0525b"); sfx("nope"); return false; }
     const why = canPlace(x, y);
     if (why) { say(x, y, why, "#e0525b"); sfx("nope"); return false; }
     coins -= cost;
-    towers.push({ type, x, y, level: 1, cd: 0.2, rot: (Math.random() - 0.5) * 0.5, spent: cost, pop: 1, kick: 0, sheen: 0, stun: 0 });
+    const nt = { type, x, y, level: 1, paths: [0, 0, 0], cd: 0.2, rot: (Math.random() - 0.5) * 0.5, spent: cost, pop: 1, kick: 0, sheen: 0, stun: 0 };
+    if (type === "hero") Object.assign(nt, { hero: heroId, hlvl: 1, xp: 0, abCd: [0, 0], rot: 0 });
+    towers.push(nt);
     slap(x, y);
+    if (type === "hero") heroArrive(nt);
     sfx("place");
     selected = null;
     if (new Set(towers.map((t) => t.type)).size >= 4) earn("full");
     return true;
   }
-  function upgrade(t) {
-    if (!t || t.level >= 3) return;
-    const cost = upgradeCost(t);
-    if (coins < cost) { say(t.x, t.y - 30, `Need ${cost - coins} more glitter`, "#e0525b"); sfx("nope"); return; }
-    coins -= cost; t.spent += cost; t.level++; t.pop = 1; t.sheen = 1;
-    burst(t.x, t.y, 16, t.level === 3 ? ["#f3cf55", "#fff3b0", "#ffd23f"] : ["#d3dbe8", "#9fb0c8", "#b9c6da"], 160);
-    for (let i = 0; i < 10; i++) fx({ x: t.x + (Math.random() - 0.5) * 44, y: t.y + 12, vx: 0, vy: -50 - Math.random() * 70, life: 0.9, max: 0.9, size: 4.5, color: t.level === 3 ? "#f3cf55" : "#9fb0c8", shape: "spark", g: 0, rot: Math.random() * 6 });
-    ring(t.x, t.y, R, R * 2.6, t.level === 3 ? "rgba(243,190,40," : "rgba(130,148,178,", 0.45, 4);
-    flash(t.x, t.y, R * 1.6, t.level === 3 ? "rgba(255,225,120," : "rgba(220,228,240,", 0.2);
-    say(t.x, t.y - 34, t.level === 3 ? "Gold foil!" : "Silver foil!", "#24357f");
-    sfx("upgrade");
-    if (t.level === 3) earn("gold");
+  function buyUpgrade(t, pi) {
+    if (!t || t.type === "hero" || !towers.includes(t)) return;
+    const st = pathState(t, pi);
+    if (st.kind !== "buy") { sfx("nope"); return; }
+    if (coins < st.cost) { say(t.x, t.y - 30, `Need ${st.cost - coins} more glitter`, "#e0525b"); sfx("nope"); return; }
+    coins -= st.cost; t.spent += st.cost; t.paths[pi]++;
+    t.level = artLevel(t); t.pop = 1; t.sheen = 1; t.spT = undefined;
+    const up = PATHS[t.type][pi].ups[st.tier - 1];
+    const top = st.tier === 5, mid = st.tier >= 3;
+    const cols = top ? ["#f3cf55", "#fff3b0", "#ffd23f"] : mid ? ["#d3dbe8", "#9fb0c8", "#b9c6da"] : ["#9cc3ea", "#ffe14d", "#ff9ec4"];
+    burst(t.x, t.y, 16, cols, 160);
+    for (let i = 0; i < 10; i++) fx({ x: t.x + (Math.random() - 0.5) * 44, y: t.y + 12, vx: 0, vy: -50 - Math.random() * 70, life: 0.9, max: 0.9, size: 4.5, color: cols[0], shape: "spark", g: 0, rot: Math.random() * 6 });
+    ring(t.x, t.y, R, R * 2.6, top ? "rgba(243,190,40," : "rgba(130,148,178,", 0.45, 4);
+    if (top) { fx({ pillar: true, x: t.x, y: t.y, life: 0.9, max: 0.9 }); word(t.x, t.y - 64, up[0].toUpperCase() + "!", "#e0a800", true); addShake(4); earn("tier5"); }
+    say(t.x, t.y - 36, up[0], "#24357f", 1.4);
+    sfx(top ? "levelup" : "upgrade");
+    if (st.tier >= 4) earn("gold");
+    panelKey = "";
     updateInfo(true);
+  }
+  function unlockNext(type, pi) {
+    const cost = unlockCost(type, pi);
+    if (unlockedTier(type, pi) >= 5 || (prog.txp[type] || 0) < cost) { sfx("nope"); return; }
+    prog.txp[type] -= cost;
+    prog.unl[type] = (prog.unl[type] || [2, 2, 2]).slice();
+    prog.unl[type][pi]++;
+    saveProg(); sfx("upgrade"); earn("unlock");
+    renderUBook(); panelKey = "";
   }
   function sell(t) {
     if (!t) return;
@@ -1319,7 +1785,7 @@
     coins += r;
     towers = towers.filter((o) => o !== t);
     say(t.x, t.y - 20, `+${r} glitter`, "#8a5d00");
-    fx({ x: t.x, y: t.y, vx: 40, vy: -170, life: 0.7, max: 0.7, shape: "sticker", type: t.type, level: t.level, rot: t.rot, g: 320 });
+    fx({ x: t.x, y: t.y, vx: 40, vy: -170, life: 0.7, max: 0.7, shape: "sticker", type: t.type, level: t.type === "hero" ? t.hlvl : t.level, hero: t.hero, rot: t.rot, g: 320 });
     puffs(t.x, t.y, 4, "#e2e5ec");
     sfx("peel");
     selected = null;
@@ -1352,7 +1818,9 @@
       if (Math.random() < 0.6) say(e.x, e.y - 20, "whoosh", "#7d8597", 0.6, 16);
       return;
     }
-    if (def0.armor && !opts.pierce) {
+    if (e.brittleT > 0) dmg *= 2;
+    if (e.weakT > 0) dmg *= 1.5;
+    if (def0.armor && !opts.pierce && !(e.armorOffT > 0)) {
       const blocked = Math.min(def0.armor, dmg * 0.75);
       dmg -= blocked;
       if (!opts.quiet && blocked >= 2) {
@@ -1371,6 +1839,7 @@
       }
     }
     e.hp -= dmg; e.lastHit = 0;
+    if (opts.hero) gainXP(dmg * 0.15);
     if (e.kind === "scribble" && !e.enraged && e.hp > 0 && e.hp < e.maxHp * 0.5) {
       e.enraged = true;
       burst(e.x, e.y, 6, ["#8c2d6b", "#e0525b"], 120, "shard");
@@ -1408,6 +1877,9 @@
         earn("blot");
       }
       if (e.kind === "eraser") earn("eraser");
+      for (const h of towers) if (h.type === "heart" && h.st && h.st.goldHeart && Math.hypot(h.x - e.x, h.y - e.y) <= h.st.range) { coins += 2; break; }
+      if (e.burnT > 0 && e.wild) for (const o of enemies) if (o !== e && !o.dead && Math.hypot(o.x - e.x, o.y - e.y) < 55) { o.burnT = 2.5; o.burnDps = e.burnDps; o.wild = true; burst(o.x, o.y, 4, ["#ff8a3d", "#ffd23f"], 90, "spark"); }
+      if (opts.hero) gainXP(6);
       if (lvl === 3) goldFinish(e.x, e.y);
       if (e.shiny) {
         burst(e.x, e.y, 18, ["#f3cf55", "#ffd23f", "#e0a800"], 200, "spark");
@@ -1429,18 +1901,19 @@
   }
 
   function sunUpdate(t, dt) {
-    const s = stats("sun", t.level); s.dmg *= t.dmgMul || 1;
-    const n = t.level === 3 ? 2 : 1;
+    const s = { ...t.st }; s.dmg *= t.dmgMul || 1; s.range *= t.rangeMul || 1;
     const cands = [];
     for (const e of enemies) if (!e.dead && onBoard(e) && Math.hypot(e.x - t.x, e.y - t.y) <= s.range + ENEMIES[e.kind].r * 0.5) cands.push(e);
     cands.sort((a, b) => b.d - a.d);
     const old = t.beams || [];
-    t.beams = cands.slice(0, n).map((e) => old.find((b) => b.e === e) || { e, heat: 0, acc: 0, tick: 0.35 });
+    t.beams = cands.slice(0, s.beams).map((e) => old.find((b) => b.e === e) || { e, heat: 0, acc: 0, tick: 0.35 });
     for (const b of t.beams) {
       const e = b.e;
-      b.heat = Math.min(1, b.heat + dt * s.heatRate);
-      const dps = s.dmg * (1 + 2 * b.heat) / (t.haste || 1);
+      b.heat = Math.min(1, b.heat + dt * 0.55 * s.heat);
+      const dps = s.dmg * (1 + s.maxHeat * b.heat) / (t.haste || 1) * (frenzyT > 0 ? 2 : 1);
       damage(e, dps * dt, "#ff7a1a", t.level, { quiet: true, pierce: true });
+      if (s.burn) { e.burnT = 2; e.burnDps = Math.max(e.burnDps || 0, dps * s.burn); if (s.wildfire) e.wild = true; }
+      if (s.trail && Math.random() < dt * 1.2) zones.push({ x: e.x, y: e.y, r: 22, life: 2, max: 2, dps: s.dmg * 0.6, tick: 0, lvl: t.level, seed: Math.random() * 6, fire: true });
       b.acc += dps * dt; b.tick -= dt;
       if (b.tick <= 0) { num(e.x, e.y - ENEMIES[e.kind].r - 6, Math.max(1, Math.round(b.acc)), "#e8630a"); b.acc = 0; b.tick = 0.35; }
       if (Math.random() < dt * (10 + 30 * b.heat)) fx({ x: e.x + (Math.random() - 0.5) * 12, y: e.y + (Math.random() - 0.5) * 12, vx: (Math.random() - 0.5) * 50, vy: -40 - Math.random() * 60, life: 0.5, max: 0.5, size: 2 + Math.random() * 2, color: b.heat > 0.6 ? "#fff3a0" : "#ff9a3d", shape: "dot", g: -30 });
@@ -1450,32 +1923,250 @@
     if (t.beams.length) { t.kick = Math.max(t.kick, 0.25); sfx("sizzle"); }
   }
 
-  function fire(t) {
-    const s = stats(t.type, t.level);
-    s.dmg *= t.dmgMul || 1;
-    if (t.type === "snow") {
+  function heroTower() { for (const t of towers) if (t.type === "hero") return t; return null; }
+  function rangeOf(t) { return t.type === "hero" ? heroStats(t.hero, t.hlvl).range : getStats(t).range * (t.rangeMul || 1); }
+  function gainXP(n) {
+    const h = heroTower();
+    if (!h || h.hlvl >= 10) return;
+    h.xp += n * (h.hero === "hoot" ? 1.4 : 1);
+    while (h.hlvl < 10 && h.xp >= xpNeed(h.hlvl)) { h.xp -= xpNeed(h.hlvl); levelUp(h); }
+    if (h.hlvl >= 10) h.xp = 0;
+  }
+  function levelUp(h) {
+    h.hlvl++; h.pop = 1; h.sheen = 1;
+    const hd = HEROES[h.hero];
+    fx({ pillar: true, x: h.x, y: h.y, life: 0.9, max: 0.9 });
+    burst(h.x, h.y, 22, ["#ffd23f", "#ffb3d4", "#9cc3ff", "#e0a800"], 220, "spark");
+    ring(h.x, h.y, R, R * 3.2, "rgba(255,210,60,", 0.55, 5);
+    fx({ x: h.x, y: h.y - 20, vx: 0, vy: -60, life: 0.9, max: 0.9, size: 14, color: "#ffd23f", shape: "bigstar", g: 0, rot: 0 });
+    say(h.x, h.y - 48, `Level ${h.hlvl}! ${hd.levels[h.hlvl]}`, "#b07a00", 2.2, 20);
+    word(h.x, h.y - 80, h.hlvl === 10 ? "LEGEND!" : "LEVEL UP!", "#e0a800", true);
+    sfx("levelup");
+    for (const ab of hd.abilities) if (ab.lvl === h.hlvl) toast(`${hd.name} learned ${ab.name}! Its button is beside the sticker sheet.`);
+    if (h.hlvl === 10) earn("legend");
+    updateInfo(true);
+  }
+  function heroArrive(h) {
+    flash(h.x, h.y, 70, "rgba(255,240,180,", 0.3);
+    ring(h.x, h.y, R, R * 4, "rgba(214,120,255,", 0.6, 6);
+    burst(h.x, h.y, 24, RAINBOW, 220, "spark");
+    word(h.x, h.y - 52, HEROES[h.hero].name.toUpperCase() + "!", "#b45ccc", true);
+    sfx("levelup");
+  }
+  function heroUpdate(t, dt) {
+    const H = heroStats(t.hero, t.hlvl);
+    const dmg = H.dmg * (t.dmgMul || 1);
+    t.cd -= dt * (frenzyT > 0 ? 2 : 1) / (t.haste || 1);
+    if (t.cd > 0) return;
+    if (t.hero === "rex") {
       let any = false;
-      for (const e of enemies) {
-        if (e.dead) continue;
-        if (Math.hypot(e.x - t.x, e.y - t.y) <= s.range + 6) {
-          any = true; damage(e, s.dmg, "#2f8fd6", t.level);
-          burst(e.x, e.y, 3, ["#7cc4f0", "#bfe6ff"], 70, "spark");
+      for (const e of enemies) if (!e.dead && onBoard(e) && Math.hypot(e.x - t.x, e.y - t.y) <= H.range) { any = true; break; }
+      if (!any) { t.cd = 0.1; return; }
+      stomp(t, H, dmg);
+      if (H.double) timers.push({ at: clock + 0.28, fn: () => { if (towers.includes(t)) stomp(t, H, dmg * 0.6); } });
+      t.cd = H.rate;
+      return;
+    }
+    const s = { range: H.range * (t.rangeMul || 1) };
+    const target = inRange(t, s);
+    if (!target) { t.cd = 0.1; return; }
+    const tgs = [target];
+    if (H.shots > 1) tgs.push(secondTarget(t, s, target) || target);
+    if (H.shots > 2) tgs.push(target);
+    const sp = t.hero === "sparkle";
+    tgs.forEach((tg, i) => {
+      const a = Math.atan2(tg.y - t.y, tg.x - t.x) + (i ? (i === 1 ? 0.35 : -0.35) : 0);
+      const mx = t.x + Math.cos(a) * 18, my = t.y + Math.sin(a) * 18 - (sp ? 10 : 0);
+      shots.push({ kind: sp ? "hbolt" : "pencil", x: mx, y: my, target: tg, tx: tg.x, ty: tg.y, spd: sp ? 520 : 600, dmg, splash: H.splash || 0, rot: 0, a });
+      if (sp) { flash(mx, my, 14, "rgba(255,170,230,", 0.1); sparksToward(mx, my, a, 3, ["#ff9ec4", "#c89bff", "#ffd23f"], 160); }
+    });
+    sfx(sp ? "hbolt" : "pencil");
+    t.cd = H.rate; t.kick = 1;
+  }
+  function stomp(t, H, dmg) {
+    for (const e of enemies) if (!e.dead && Math.hypot(e.x - t.x, e.y - t.y) <= H.range) {
+      damage(e, dmg, "#5d7a2a", 1, { hero: true });
+      if (H.stun && !e.dead && !ENEMIES[e.kind].boss) applyStun(e, H.stun, "stomp");
+    }
+    ring(t.x, t.y, R, H.range, "rgba(120,90,50,", 0.4, 5);
+    ring(t.x, t.y, R * 0.6, H.range * 0.7, "rgba(160,130,80,", 0.5, 3);
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; puffs(t.x + Math.cos(a) * H.range * 0.7, t.y + Math.sin(a) * H.range * 0.5, 1, "#c9b79a"); }
+    burst(t.x, t.y + 10, 8, ["#8b6a4a", "#b89a74"], 160, "shard");
+    splat(t.x, t.y + 6, "#8b6a4a", 0.5);
+    t.pop = 0.6; t.kick = 1;
+    addShake(2.5);
+    sfx("stomp");
+  }
+  const ABILITY = {
+    sparkle: [
+      (h, L) => {
+        stormT = 3; stormTick = 0; stormDmg = 6 + 2 * L;
+        word(W / 2, 110, "GLITTER STORM!", "#b45ccc", true);
+        flash(h.x, h.y, 60, "rgba(255,200,240,", 0.3); sfx("storm");
+      },
+      (h, L) => {
+        let best = null;
+        for (const e of enemies) if (!e.dead && onBoard(e) && (!best || e.hp > best.hp)) best = e;
+        if (!best) return false;
+        shots.push({ kind: "wish", sx: best.x + 220, sy: -70, tx: best.x, ty: best.y, target: best, p: 0, dur: 0.75, dmg: 400 + 60 * L, x: best.x + 220, y: -70, rot: 0 });
+        word(h.x, h.y - 52, "MAKE A WISH!", "#e0a800", true); sfx("wish");
+      },
+    ],
+    rex: [
+      (h, L) => {
+        for (const e of enemies) if (!e.dead && Math.hypot(e.x - h.x, e.y - h.y) <= 190) {
           const def = ENEMIES[e.kind];
-          if (def.noSlow) continue;
-          e.slowM = Math.min(e.slowT > 0 ? e.slowM : 1, def.boss ? Math.max(s.slow, 0.55) : s.slow);
-          e.slowT = 1.6;
+          e.d = Math.max(0, e.d - (def.boss ? 25 : 85));
+          const q = posAt(e.d, e.pi); e.x = q.x; e.y = q.y;
+          if (!def.noSlow) { e.slowM = 0.5; e.slowT = 3; }
+          e.kb = 1.4; e.squash = 1;
         }
+        for (let i = 0; i < 4; i++) ring(h.x, h.y, R + i * 20, 190 + i * 15, "rgba(120,90,50,", 0.5 + i * 0.12, 6 - i);
+        word(h.x, h.y - 52, "ROAAAR!", "#5d7a2a", true); addShake(8); sfx("roar");
+      },
+      (h, L) => {
+        if (!enemies.some((e) => !e.dead && onBoard(e))) return false;
+        for (let i = 0; i < 6; i++) timers.push({ at: clock + i * 0.3, fn: () => {
+          const pool = enemies.filter((e) => !e.dead && onBoard(e));
+          const tg = pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+          const tx = tg ? tg.x : 100 + Math.random() * (W - 200), ty = tg ? tg.y : 100 + Math.random() * (H - 200);
+          shots.push({ kind: "meteor", sx: tx + 260, sy: -80, tx, ty, target: tg, p: 0, dur: 0.6, dmg: 120 + 25 * L, x: tx + 260, y: -80, rot: 0 });
+          sfx("meteor");
+        } });
+        word(W / 2, 110, "METEOR SHOWER!", "#e0525b", true);
+      },
+    ],
+    hoot: [
+      (h, L) => {
+        for (const e of enemies) if (!e.dead && onBoard(e)) {
+          e.stunT = Math.max(e.stunT, ENEMIES[e.kind].boss ? 0.8 : 2.2); e.stunKind = "quiz";
+          say(e.x, e.y - 28, "?", "#24357f", 2, 24);
+        }
+        quizFlash = 1; word(W / 2, 110, "POP QUIZ!", "#24357f", true); sfx("quiz");
+      },
+      (h, L) => {
+        frenzyT = L >= 10 ? 10 : 8;
+        word(W / 2, 110, "GOLD STAR DAY!", "#e0a800", true); sfx("goldday");
+        for (const t of towers) burst(t.x, t.y, 6, ["#ffd23f", "#e0a800"], 120, "spark");
+      },
+    ],
+  };
+  function useAbility(i) {
+    if (!started || over || paused || menuOpen) return;
+    const h = heroTower();
+    if (!h) return;
+    const ab = HEROES[h.hero].abilities[i];
+    if (!ab || h.hlvl < ab.lvl || h.abCd[i] > 0) { sfx("nope"); return; }
+    if (ABILITY[h.hero][i](h, h.hlvl) === false) { say(h.x, h.y - 40, "No doodles to aim at yet", "#7d8597", 1.2); sfx("nope"); return; }
+    h.abCd[i] = ab.cd; h.kick = 1; h.pop = 0.6;
+    earn("showtime");
+  }
+  function wishImpact(s) {
+    const x = s.tx, y = s.ty;
+    if (s.target && !s.target.dead) damage(s.target, s.dmg, "#e0a800", 1, { hero: true });
+    for (const e of enemies) if (e !== s.target && !e.dead && Math.hypot(e.x - x, e.y - y) <= 70) damage(e, s.dmg * 0.4, "#e0a800", 1, { hero: true });
+    flash(x, y, 120, "rgba(255,240,170,", 0.3);
+    ring(x, y, 10, 130, "rgba(255,210,60,", 0.5, 8); ring(x, y, 6, 90, "rgba(255,255,255,", 0.35, 5);
+    burst(x, y, 40, ["#ffd23f", "#e0a800", "#ff9ec4", "#9cc3ff"], 300, "spark");
+    for (let i = 0; i < 5; i++) fx({ x, y, vx: (Math.random() - 0.5) * 200, vy: -100 - Math.random() * 120, life: 1, max: 1, size: 8, color: "#ffd23f", shape: "bigstar", g: 200, rot: Math.random() * 6 });
+    splat(x, y, "#f3cf55", 1.6);
+    word(x, y - 40, "WISH GRANTED!", "#e0a800", true);
+    addShake(10); freeze(0.12); sfx("boom");
+  }
+  function meteorImpact(s) {
+    for (const e of enemies) if (!e.dead && Math.hypot(e.x - s.tx, e.y - s.ty) <= 45) damage(e, s.dmg, "#e0525b", 1, { hero: true });
+    explode(s.tx, s.ty);
+    splat(s.tx, s.ty, "#4b3a30", 0.9);
+    sfx("boom");
+  }
+
+  function pickTargets(t, s, n) {
+    const c = enemies.filter((e) => !e.dead && onBoard(e) && Math.hypot(e.x - t.x, e.y - t.y) <= s.range + ENEMIES[e.kind].r * 0.5).sort((a, b) => b.d - a.d);
+    if (!c.length) return [];
+    const out = c.slice(0, n);
+    while (out.length < n) out.push(c[out.length % c.length]);
+    return out;
+  }
+  const toughest = (list) => { let b = null; for (const e of list) if (!b || e.hp > b.hp) b = e; return b; };
+  const trailColor = (k) => k === "wish" ? (Math.random() < 0.5 ? "#ffd23f" : "#ffe9a0") : k === "comet" ? (Math.random() < 0.5 ? "#9fdcff" : "#ffffff") : (Math.random() < 0.5 ? "#ff8a3d" : "#ffd23f");
+  function towerSpecials(t, s, dt) {
+    if (!(s.comet || s.orbital || s.thunder || s.sunburst)) return;
+    t.spT = (t.spT ?? 2) - dt * (frenzyT > 0 ? 2 : 1);
+    if (t.spT > 0) return;
+    const live = enemies.filter((e) => !e.dead && onBoard(e));
+    const near = live.filter((e) => Math.hypot(e.x - t.x, e.y - t.y) <= s.range * (t.rangeMul || 1) + 10);
+    const mul = t.dmgMul || 1;
+    if (s.comet) {
+      const tg = toughest(near);
+      if (!tg) { t.spT = 0.4; return; }
+      t.spT = 5;
+      shots.push({ kind: "comet", sx: tg.x + 180, sy: -60, tx: tg.x, ty: tg.y, target: tg, p: 0, dur: 0.6, dmg: 300 * mul, x: tg.x + 180, y: -60, rot: 0, lvl: t.level });
+      sfx("meteor");
+    } else if (s.orbital) {
+      const tg = toughest(live);
+      if (!tg) { t.spT = 0.4; return; }
+      t.spT = 8;
+      fx({ orbital: true, x: tg.x, y: tg.y, life: 0.5, max: 0.5 });
+      damage(tg, 600 * mul, "#e0525b", t.level, { pierce: true });
+      for (const e of live) if (e !== tg && !e.dead && Math.hypot(e.x - tg.x, e.y - tg.y) < 40) damage(e, 150 * mul, "#e0525b", t.level);
+      explode(tg.x, tg.y); word(tg.x, tg.y - 44, "ORBITAL STRIKE!", "#e0525b", true); addShake(6);
+    } else if (s.thunder) {
+      if (!live.length) { t.spT = 0.4; return; }
+      t.spT = 4;
+      for (let i = 0; i < 6; i++) {
+        const e = live[Math.floor(Math.random() * live.length)];
+        if (e.dead) continue;
+        bolts.push({ pts: [[e.x + (Math.random() - 0.5) * 60, -20], [e.x, e.y]], life: 0.3, max: 0.3 });
+        damage(e, s.dmg * 2.5 * mul, "#3d7bff", t.level);
+        flash(e.x, e.y, 22, "rgba(170,205,255,", 0.15);
       }
-      if (!any) return false;
+      addShake(3); sfx("zap"); word(W / 2, 100, "THUNDERSTORM!", "#3d7bff");
+    } else if (s.sunburst) {
+      if (!near.length) { t.spT = 0.4; return; }
+      t.spT = 6;
+      for (const e of near) damage(e, 200 * mul, "#ff7a1a", t.level, { pierce: true });
+      flash(t.x, t.y, s.range, "rgba(255,200,90,", 0.3); ring(t.x, t.y, R, s.range * 1.1, "rgba(255,150,40,", 0.5, 8);
+      word(t.x, t.y - 44, "SUNBURST!", "#ff7a1a", true); addShake(4); sfx("boom");
+    }
+  }
+  function novaBoom(x, y, dmg, lvl) {
+    for (const e of enemies) if (!e.dead && Math.hypot(e.x - x, e.y - y) <= 70) damage(e, dmg, "#e0a800", lvl);
+    flash(x, y, 70, "rgba(255,240,170,", 0.25); ring(x, y, 6, 80, "rgba(255,210,60,", 0.4, 6);
+    burst(x, y, 20, ["#ffd23f", "#ff8a3d", "#e0a800"], 240, "spark");
+    word(x, y - 34, "SUPERNOVA!", "#e0a800"); addShake(3); sfx("boom");
+  }
+  function cometImpact(s) {
+    if (s.target && !s.target.dead) damage(s.target, s.dmg, "#2f8fd6", s.lvl);
+    for (const e of enemies) if (!e.dead && Math.hypot(e.x - s.tx, e.y - s.ty) < 60) {
+      if (e !== s.target) damage(e, s.dmg * 0.3, "#2f8fd6", s.lvl);
+      if (!e.dead && !ENEMIES[e.kind].boss) applyStun(e, 1, "ice");
+    }
+    flash(s.tx, s.ty, 60, "rgba(220,240,255,", 0.25); ring(s.tx, s.ty, 6, 70, "rgba(124,196,240,", 0.4, 6);
+    burst(s.tx, s.ty, 18, ["#9fdcff", "#ffffff", "#7cc4f0"], 220, "shard");
+    word(s.tx, s.ty - 34, "ICE COMET!", "#2f8fd6"); addShake(4); sfx("freeze");
+  }
+
+  function fire(t) {
+    const s = { ...t.st };
+    s.dmg *= t.dmgMul || 1;
+    s.range *= t.rangeMul || 1;
+    if (t.type === "snow") {
+      const inR = enemies.filter((e) => !e.dead && Math.hypot(e.x - t.x, e.y - t.y) <= s.range + 6);
+      if (!inR.length) return false;
       t.pulses = (t.pulses || 0) + 1;
-      if (t.level === 3 && t.pulses % 3 === 0) {
-        let n = 0;
-        for (const e of enemies) if (!e.dead && !ENEMIES[e.kind].boss && Math.hypot(e.x - t.x, e.y - t.y) <= s.range + 6) { if (applyStun(e, 0.9, "ice")) n++; }
-        if (n) {
-          flash(t.x, t.y, s.range, "rgba(220,240,255,", 0.25);
-          ring(t.x, t.y, R, s.range + 10, "rgba(255,255,255,", 0.5, 6);
-          word(t.x, t.y - 40, "FREEZE!", "#2f8fd6"); sfx("freeze"); addShake(1.5);
-        }
+      const freezeNow = s.freezeEvery && t.pulses % s.freezeEvery === 0;
+      let nf = 0;
+      for (const e of inR) {
+        damage(e, s.dmg, "#2f8fd6", t.level);
+        burst(e.x, e.y, 3, ["#7cc4f0", "#bfe6ff"], 70, "spark");
+        const def = ENEMIES[e.kind];
+        if (!def.noSlow) { e.slowM = Math.min(e.slowT > 0 ? e.slowM : 1, def.boss && !s.bossFull ? Math.max(s.slow, 0.55) : s.slow); e.slowT = 1.6; }
+        if (freezeNow && !def.boss && !e.dead && applyStun(e, s.freezeDur, "ice")) { nf++; if (s.brittle) e.brittleT = s.freezeDur + 0.2; }
+      }
+      if (nf) {
+        flash(t.x, t.y, s.range, "rgba(220,240,255,", 0.25);
+        ring(t.x, t.y, R, s.range + 10, "rgba(255,255,255,", 0.5, 6);
+        word(t.x, t.y - 40, "FREEZE!", "#2f8fd6"); sfx("freeze"); addShake(1.5);
       }
       ring(t.x, t.y, R, s.range, "rgba(80,170,240,", 0.45, 4);
       ring(t.x, t.y, R * 0.6, s.range * 0.7, "rgba(150,210,250,", 0.6, 2);
@@ -1483,35 +2174,49 @@
         const a = i / 12 * Math.PI * 2, v = 150 + Math.random() * 60;
         fx({ x: t.x + Math.cos(a) * R, y: t.y + Math.sin(a) * R, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0.4, max: 0.4, size: 5, color: "#7cc4f0", shape: "shard", g: 0 });
       }
+      if (s.shards) {
+        const live = inR.filter((e) => !e.dead);
+        for (let i = 0; live.length && i < s.shards; i++) {
+          const tg = live[i % live.length];
+          shots.push({ kind: "ice", x: t.x, y: t.y, target: tg, tx: tg.x, ty: tg.y, spd: 420, dmg: 6 + s.dmg, rot: 0, lvl: t.level, bounce: 0 });
+        }
+      }
       sfx("snow");
       return true;
     }
     const target = inRange(t, s);
     if (!target) return false;
+    t.shotN = (t.shotN || 0) + 1;
     if (t.type === "star") {
-      const tgs = t.level >= 2 ? [target, secondTarget(t, s, target) || target] : [target];
+      const n = s.shots || 1, tgs = pickTargets(t, s, n);
+      const nova = s.nova && t.shotN % 6 === 0;
       tgs.forEach((tg, i) => {
-        const a = Math.atan2(tg.y - t.y, tg.x - t.x) + (i ? 0.3 : 0), mx = t.x + Math.cos(a) * 16, my = t.y + Math.sin(a) * 16;
-        shots.push({ kind: "star", x: mx, y: my, target: tg, tx: tg.x, ty: tg.y, spd: 460, dmg: s.dmg, rot: 0, lvl: t.level, bounce: t.level === 3 ? 1 : 0 });
+        const a = Math.atan2(tg.y - t.y, tg.x - t.x) + (i - (n - 1) / 2) * 0.22, mx = t.x + Math.cos(a) * 16, my = t.y + Math.sin(a) * 16;
+        shots.push({ kind: "star", x: mx, y: my, target: tg, tx: tg.x, ty: tg.y, spd: s.homing ? 640 : 460, dmg: s.dmg, rot: 0, lvl: t.level,
+          bounce: s.bounce || 0, homing: !!s.homing, pierce: !!s.pierce, crit: s.crit || 0, nova: nova && i === 0 });
         flash(mx, my, 13, "rgba(255,210,60,", 0.1);
         sparksToward(mx, my, a, 3, ["#ffd23f", "#ffb03b"], 170);
       });
       sfx("star");
     } else if (t.type === "rainbow") {
-      const tgs = t.level === 3 ? [target, secondTarget(t, s, target) || target] : [target];
+      const n = s.blobs || 1, tgs = pickTargets(t, s, n);
+      const tsu = s.tsunami && t.shotN % 4 === 0;
       tgs.forEach((tg, i) => {
         const def = ENEMIES[tg.kind];
-        const lead = posAt(tg.d + (tg.stunT > 0 ? 0 : def.speed * (tg.slowT > 0 ? tg.slowM : 1)) * (0.55 + i * 0.15) - (i && tg === target ? 26 : 0), tg.pi);
-        shots.push({ kind: "rainbow", sx: t.x, sy: t.y, tx: lead.x, ty: lead.y, p: -i * 0.15, dur: 0.55, dmg: s.dmg, splash: s.splash, x: t.x, y: t.y, hist: [], lvl: t.level });
+        const lead = posAt(tg.d + (tg.stunT > 0 ? 0 : def.speed * (tg.slowT > 0 ? tg.slowM : 1)) * (0.55 + i * 0.15) - (i && tg === tgs[0] ? 26 * i : 0), tg.pi);
+        const big = tsu && i === 0;
+        shots.push({ kind: "rainbow", sx: t.x, sy: t.y, tx: lead.x, ty: lead.y, p: -i * 0.12, dur: 0.55, dmg: s.dmg * (big ? 3 : 1), splash: s.splash * (big ? 2.5 : 1),
+          x: t.x, y: t.y, hist: [], lvl: t.level, puddle: s.puddle || 0, sticky: s.sticky || 0, prism: !!s.prism, spectrum: !!s.spectrum, tsunami: big });
       });
       burst(t.x, t.y - 8, 8, RAINBOW, 110, "dot");
       sfx("rainbow");
     } else if (t.type === "rocket") {
-      const tgs = t.level === 3 ? [target, secondTarget(t, s, target) || target] : [target];
+      const n = s.rockets || 1, tgs = pickTargets(t, s, n);
       tgs.forEach((tg, i) => {
-        const twin = tgs.length > 1;
-        const a = Math.atan2(tg.y - t.y, tg.x - t.x) + (twin ? (i ? 0.6 : -0.6) : 0);
-        shots.push({ kind: "rocket", x: t.x + (twin ? (i ? 14 : -14) : 0), y: t.y - 10, a, spd: 160, target: tg, tx: tg.x, ty: tg.y, dmg: s.dmg, lvl: t.level });
+        const off = n > 1 ? (i - (n - 1) / 2) * 0.35 : 0;
+        const a = Math.atan2(tg.y - t.y, tg.x - t.x) + off;
+        shots.push({ kind: "rocket", x: t.x + off * 24, y: t.y - 10, a, spd: s.fast ? 260 : 160, turn: s.fast ? 12 : 7, target: tg, tx: tg.x, ty: tg.y,
+          dmg: s.dmg * (n >= 6 ? 0.6 : 1), lvl: t.level, blast: s.blast, bomblets: s.bomblets || 0, bombletMul: s.bombletMul || 1, moon: !!s.moon, rstun: s.rstun || 0, napalm: !!s.napalm });
       });
       puffs(t.x, t.y + 12, 7);
       flash(t.x, t.y - 14, 15, "rgba(255,170,60,", 0.12);
@@ -1530,14 +2235,15 @@
       for (const e of hit) {
         pts.push([e.x, e.y]);
         damage(e, dmg, "#3d7bff", t.level);
-        if (t.level === 3 && !ENEMIES[e.kind].boss && !e.dead) { applyStun(e, 0.45, "zap"); }
+        if (s.zstun && !ENEMIES[e.kind].boss && !e.dead) applyStun(e, s.zstun, "zap");
         burst(e.x, e.y, 5, ["#9cc7ff", "#ffe97a"], 150, "spark");
         flash(e.x, e.y, 16, "rgba(150,195,255,", 0.12);
-        dmg *= 0.85;
+        dmg *= s.falloff;
       }
       bolts.push({ pts, life: 0.22, max: 0.22 });
       flash(t.x, t.y - 18, 18, "rgba(170,205,255,", 0.12);
       if (t.level === 3) ring(t.x, t.y - 16, 6, 30, "rgba(140,170,220,", 0.3, 2);
+      if (s.orb && t.shotN % 3 === 0) shots.push({ kind: "orb", x: t.x, y: t.y - 18, target, tx: target.x, ty: target.y, spd: 120, dmg: s.dmg * 0.4, zap: 0, life: 4, lvl: t.level });
       if (hit.length >= 6) { earn("chain"); word(target.x, target.y - 34, "ZZAP!", "#3d7bff"); }
       addShake(0.8);
       sfx("zap");
@@ -1546,6 +2252,7 @@
   }
 
   function update(dt) {
+    for (const t of towers) if (t.type !== "hero") t.st = getStats(t);
     if (waveActive) {
       waveTime += dt;
       while (queue.length && queue[0].t <= waveTime) spawn(queue.shift().kind);
@@ -1553,6 +2260,16 @@
         waveActive = false;
         const bonus = 8 + wave * 2;
         coins += bonus;
+        for (const t of towers) if (t.type !== "hero") prog.txp[t.type] = (prog.txp[t.type] || 0) + 8 + wave * 2;
+        saveProg();
+        for (const t of towers) if (t.type === "heart" && t.st) {
+          if (t.st.waveGlitter) { coins += t.st.waveGlitter; say(t.x, t.y - 34, `+${t.st.waveGlitter} glitter`, "#8a5d00", 1.5, 18); }
+          if (t.st.lifeWave) { lives += t.st.lifeWave; say(t.x, t.y - 54, `+${t.st.lifeWave} life`, "#e0525b", 1.5, 18); }
+        }
+        if (!xpHinted && ORDER.some(canUnlockAny)) { xpHinted = true; toast("Your stickers earned enough XP to unlock an upgrade. Open Menu, then the Upgrade book."); }
+        gainXP(40 + wave * 5);
+        const hh = heroTower();
+        if (hh && hh.hero === "hoot") { const g = heroStats("hoot", hh.hlvl).waveGlitter; if (g) { coins += g; say(hh.x, hh.y - 44, `+${g} glitter from the Professor`, "#8a5d00", 1.8, 18); } }
         earn("first");
         if (!lostThisWave && wave >= 3) earn("perfect");
         const prevNb = prog.best.notebook || 0;
@@ -1572,6 +2289,7 @@
       if (autoT <= 0) { autoT = 0; startWave(); }
     }
 
+    const statics = towers.filter((z) => z.type === "zap" && z.st && z.st.staticField && !(z.stun > 0));
     for (const e of enemies) e.boost = 1;
     for (const h of enemies) if (h.kind === "highlighter") for (const o of enemies) if (o !== h && Math.hypot(o.x - h.x, o.y - h.y) < 60) o.boost = 1.3;
     for (const e of enemies) {
@@ -1584,6 +2302,15 @@
       if (e.kind === "highlighter" && Math.random() < dt * 30) fx({ x: e.x, y: e.y, vx: 0, vy: 0, life: 0.5, max: 0.5, size: 6, color: "#fff176", shape: "dot", g: 0 });
       if (e.born > 0) e.born = Math.max(0, e.born - dt * 2.5);
       let spd = def.speed * (e.slowT > 0 ? e.slowM : 1) * (e.boost || 1);
+      if (statics.length && statics.some((z) => Math.hypot(z.x - e.x, z.y - e.y) <= z.st.range)) spd *= 0.8;
+      if (e.weakT > 0) e.weakT -= dt;
+      if (e.armorOffT > 0) e.armorOffT -= dt;
+      if (e.brittleT > 0) e.brittleT -= dt;
+      if (e.burnT > 0) {
+        e.burnT -= dt; e.burnTick = (e.burnTick || 0) - dt;
+        if (e.burnTick <= 0) { e.burnTick = 0.25; damage(e, e.burnDps * 0.25, "#e8630a", 1, { quiet: true, pierce: true }); }
+        if (Math.random() < dt * 14) fx({ x: e.x + (Math.random() - 0.5) * 14, y: e.y - 4, vx: (Math.random() - 0.5) * 16, vy: -50 - Math.random() * 30, life: 0.45, max: 0.45, size: 3 + Math.random() * 2, color: Math.random() < 0.5 ? "#ff8a3d" : "#ffd23f", shape: "dot", g: -20 });
+      }
       if (e.enraged) spd *= 1.35;
       e.lastHit += dt;
       if (e.stunRes > 0) e.stunRes -= dt;
@@ -1615,7 +2342,7 @@
         } else if (e.dashCd <= 0) {
           e.dashT = 0.8; e.dashCd = 4.5;
           let tg = null, bd = 90;
-          for (const t of towers) { const dd = Math.hypot(t.x - e.x, t.y - e.y); if (dd < bd && !(t.stun > 0)) { bd = dd; tg = t; } }
+          for (const t of towers) { const dd = Math.hypot(t.x - e.x, t.y - e.y); if (dd < bd && !(t.stun > 0) && !t.guard) { bd = dd; tg = t; } }
           if (tg) {
             tg.stun = 3;
             fx({ slash: true, x: tg.x, y: tg.y, life: 0.4, max: 0.4 });
@@ -1650,7 +2377,7 @@
         e.abil -= dt;
         if (e.abil <= 0) {
           let tgt = null, bd = 80;
-          for (const t of towers) { const d = Math.hypot(t.x - e.x, t.y - e.y); if (d < bd && !(t.stun > 0)) { bd = d; tgt = t; } }
+          for (const t of towers) { const d = Math.hypot(t.x - e.x, t.y - e.y); if (d < bd && !(t.stun > 0) && !t.guard) { bd = d; tgt = t; } }
           if (tgt) {
             tgt.stun = 2.5; e.abil = 3.5;
             burst(tgt.x, tgt.y, 12, ["#ff9eb5", "#c9ccd6", "#ffc2d1"], 110);
@@ -1673,52 +2400,94 @@
     }
     enemies = enemies.filter((e) => !e.dead);
 
-    for (const t of towers) { t.haste = 1; t.dmgMul = 1; t.buffed = false; }
+    for (const t of towers) { t.haste = 1; t.dmgMul = 1; t.buffed = false; t.rangeMul = 1; t.hootBuff = false; t.cheer = false; t.guard = false; }
     for (const h of towers) {
-      if (h.type !== "heart" || h.stun > 0) continue;
-      const hs = stats("heart", h.level);
-      for (const t of towers) if (t !== h && t.type !== "heart" && Math.hypot(t.x - h.x, t.y - h.y) <= hs.range) { t.haste = Math.min(t.haste, hs.haste); t.dmgMul = Math.max(t.dmgMul, hs.dmgMul); t.buffed = true; }
+      if (h.stun > 0 || !h.st) continue;
+      if (h.type === "heart") {
+        const hs = h.st;
+        for (const t of towers) if (t !== h && t.type !== "heart" && Math.hypot(t.x - h.x, t.y - h.y) <= hs.range) {
+          t.haste = Math.min(t.haste, hs.haste); t.dmgMul = Math.max(t.dmgMul, hs.dmgBuff); t.rangeMul = Math.max(t.rangeMul, hs.rangeBuff);
+          if (hs.cheer) t.cheer = true;
+          if (hs.guard) t.guard = true;
+          t.buffed = true;
+        }
+      } else if (h.type === "snow" && h.st.chillAura) {
+        for (const t of towers) if (t !== h && Math.hypot(t.x - h.x, t.y - h.y) <= h.st.range) { t.haste = Math.min(t.haste, 1 / 1.15); t.buffed = true; }
+      }
     }
+    const hero = heroTower();
+    if (hero) {
+      hero.abCd = hero.abCd.map((c) => Math.max(0, c - dt));
+      if (hero.hero === "hoot" && !(hero.stun > 0)) {
+        const HS = heroStats("hoot", hero.hlvl);
+        for (const t of towers) if (t !== hero && Math.hypot(t.x - hero.x, t.y - hero.y) <= HS.aura) { t.rangeMul = Math.max(t.rangeMul, HS.rangeBuff); t.dmgMul = Math.max(t.dmgMul, HS.dmgBuff); t.hootBuff = true; }
+      }
+      if (waveActive) gainXP(dt * 4);
+    }
+    clock += dt;
+    for (const tm of timers) if (!tm.done && tm.at <= clock) { tm.done = true; tm.fn(); }
+    timers = timers.filter((tm) => !tm.done);
+    if (stormT > 0) {
+      stormT -= dt; stormTick -= dt;
+      if (Math.random() < dt * 90) fx({ x: Math.random() * W, y: -8, vx: (Math.random() - 0.5) * 40, vy: 220 + Math.random() * 160, life: 2.6, max: 2.6, size: 3 + Math.random() * 3, color: ["#ff9ec4", "#ffd23f", "#7fe0b0", "#8fc1ff", "#c89bff"][Math.floor(Math.random() * 5)], shape: "spark", g: 1, rot: Math.random() * 6 });
+      if (stormTick <= 0) {
+        stormTick = 0.2;
+        for (const e of enemies) if (!e.dead && onBoard(e)) {
+          damage(e, stormDmg, "#b45ccc", 1, { quiet: true, hero: true });
+          if (!ENEMIES[e.kind].noSlow) { e.slowM = Math.min(e.slowT > 0 ? e.slowM : 1, 0.6); e.slowT = Math.max(e.slowT, 0.4); }
+          if (Math.random() < 0.3) burst(e.x, e.y, 2, ["#ff9ec4", "#c89bff", "#ffd23f"], 80, "spark");
+        }
+      }
+    }
+    if (frenzyT > 0) frenzyT -= dt;
     for (const t of towers) {
       t.pop = Math.max(0, t.pop - dt * 4);
       t.kick = Math.max(0, t.kick - dt * 6);
       t.sheen = Math.max(0, (t.sheen || 0) - dt * 1.6);
       if (settings.vfx && t.level >= 2 && !t.sheen && Math.random() < dt * 0.12) t.sheen = 1;
-      if (t.stun > 0) { t.stun -= dt; t.beams = []; continue; }
+      if (t.stun > 0) { t.stun -= dt * (t.cheer ? 2 : 1); t.beams = []; continue; }
       if (t.type === "heart") {
         t.cd -= dt;
         if (t.cd <= 0) {
           t.cd = 1.4; t.kick = 0.6;
-          const hs = stats("heart", t.level);
+          const hs = t.st;
           ring(t.x, t.y, R, hs.range, "rgba(255,110,160,", 0.6, 3);
           for (const o of towers) if (o.buffed && Math.hypot(o.x - t.x, o.y - t.y) <= hs.range) fx({ x: o.x + (Math.random() - 0.5) * 20, y: o.y - 18, vx: (Math.random() - 0.5) * 20, vy: -45, life: 0.9, max: 0.9, size: 5, color: "#ff6fa0", shape: "heart", g: 0 });
         }
         continue;
       }
+      if (t.type === "hero") { heroUpdate(t, dt); continue; }
+      towerSpecials(t, t.st, dt);
       if (t.type === "sun") { sunUpdate(t, dt); continue; }
-      t.cd -= dt / (t.haste || 1);
+      t.cd -= dt / (t.haste || 1) * (frenzyT > 0 ? 2 : 1);
       if (t.cd <= 0) {
-        if (fire(t)) { t.cd = stats(t.type, t.level).rate; t.kick = 1; }
+        if (fire(t)) { t.cd = t.st.rate; t.kick = 1; }
         else t.cd = 0.1;
       }
     }
 
     for (const s of shots) {
-      if (s.kind === "star") {
+      if (s.kind === "star" || s.kind === "ice") {
         if (s.target && !s.target.dead) { s.tx = s.target.x; s.ty = s.target.y; }
         const dx = s.tx - s.x, dy = s.ty - s.y, d = Math.hypot(dx, dy);
         const step = s.spd * dt;
         s.rot += dt * 12;
-        fx({ x: s.x, y: s.y, vx: 0, vy: 0, life: 0.22, max: 0.22, size: 3.5, color: "#ffd23f", shape: "dot", g: 0 });
+        fx({ x: s.x, y: s.y, vx: 0, vy: 0, life: 0.22, max: 0.22, size: 3.5, color: s.kind === "ice" ? "#9fdcff" : "#ffd23f", shape: "dot", g: 0 });
         if (d <= step + 4) {
           s.done = true;
-          if (s.target && !s.target.dead) damage(s.target, s.dmg, "#c98a00", s.lvl, { dodge: true });
-          burst(s.tx, s.ty, 5, ["#ffd23f", "#ffb03b"], 120, "spark");
+          const ice = s.kind === "ice";
+          if (s.target && !s.target.dead) {
+            const crit = s.crit && Math.random() < s.crit;
+            damage(s.target, s.dmg * (crit ? 3 : 1), ice ? "#2f8fd6" : crit ? "#e0525b" : "#c98a00", s.lvl, { dodge: !s.homing, pierce: s.pierce });
+            if (crit) word(s.tx, s.ty - 26, "CRIT!", "#e0525b");
+          }
+          if (s.nova) novaBoom(s.tx, s.ty, s.dmg * 3, s.lvl);
+          burst(s.tx, s.ty, 5, ice ? ["#9fdcff", "#ffffff"] : ["#ffd23f", "#ffb03b"], 120, ice ? "shard" : "spark");
           flash(s.tx, s.ty, 14, "rgba(255,220,90,", 0.1);
           if (s.bounce > 0) {
             let nx = null, bd = 95;
             for (const e of enemies) { if (e.dead || e === s.target) continue; const dd = Math.hypot(e.x - s.tx, e.y - s.ty); if (dd < bd) { bd = dd; nx = e; } }
-            if (nx) { shots.push({ kind: "star", x: s.tx, y: s.ty, target: nx, tx: nx.x, ty: nx.y, spd: 520, dmg: s.dmg * 0.7, rot: 0, lvl: s.lvl, bounce: 0 }); ring(s.tx, s.ty, 4, 20, "rgba(255,210,60,", 0.2, 2); }
+            if (nx) { shots.push({ kind: s.kind, x: s.tx, y: s.ty, target: nx, tx: nx.x, ty: nx.y, spd: 520, dmg: s.dmg * 0.7, rot: 0, lvl: s.lvl, bounce: s.bounce - 1, homing: s.homing, pierce: s.pierce, crit: s.crit }); ring(s.tx, s.ty, 4, 20, "rgba(255,210,60,", 0.2, 2); }
           }
         } else { s.x += dx / d * step; s.y += dy / d * step; }
       } else if (s.kind === "rainbow") {
@@ -1730,7 +2499,12 @@
         if (s.p >= 1) {
           s.done = true;
           let hits = 0;
-          for (const e of enemies) if (Math.hypot(e.x - s.tx, e.y - s.ty) <= s.splash) { damage(e, s.dmg, "#8a55e8", s.lvl); hits++; }
+          for (const e of enemies) if (!e.dead && Math.hypot(e.x - s.tx, e.y - s.ty) <= s.splash) {
+            damage(e, s.dmg, "#8a55e8", s.lvl); hits++;
+            if (s.sticky && !ENEMIES[e.kind].noSlow) { e.slowM = Math.min(e.slowT > 0 ? e.slowM : 1, s.sticky); e.slowT = Math.max(e.slowT, 2); }
+            if (s.prism) e.armorOffT = 3;
+            if (s.spectrum) e.weakT = 3;
+          }
           burst(s.tx, s.ty, 26, RAINBOW, 210);
           burst(s.tx, s.ty, 10, RAINBOW, 130, "dot");
           flash(s.tx, s.ty, s.splash * 0.7, "rgba(255,240,180,", 0.16);
@@ -1740,29 +2514,76 @@
           if (hits >= 3) word(s.tx, s.ty - 34, "SPLASH!", "#8a55e8");
           if (hits >= 5) earn("splash");
           addShake(1.5);
-          if (s.lvl >= 2) zones.push({ x: s.tx, y: s.ty, r: s.splash * 0.7, life: 2.6, max: 2.6, dps: s.dmg * 0.4, tick: 0, lvl: s.lvl, seed: Math.random() * 6 });
+          if (s.puddle) zones.push({ x: s.tx, y: s.ty, r: s.splash * 0.7 * (s.puddle > 1 ? 1.5 : 1), life: 2.6, max: 2.6, dps: s.dmg * 0.4 * (s.puddle > 1 ? 2 : 1), tick: 0, lvl: s.lvl, seed: Math.random() * 6 });
+          if (s.tsunami) { ring(s.tx, s.ty, 10, s.splash * 1.3, "rgba(74,168,255,", 0.5, 7); word(s.tx, s.ty - 46, "TSUNAMI!", "#4aa8ff", true); addShake(5); }
         }
       } else if (s.kind === "rocket") {
         if (s.target && !s.target.dead) { s.tx = s.target.x; s.ty = s.target.y; }
         const want = Math.atan2(s.ty - s.y, s.tx - s.x);
         let da = want - s.a; while (da > Math.PI) da -= Math.PI * 2; while (da < -Math.PI) da += Math.PI * 2;
-        s.a += Math.max(-7 * dt, Math.min(7 * dt, da));
-        s.spd = Math.min(560, s.spd + 600 * dt);
+        const tr = s.turn || 7;
+        s.a += Math.max(-tr * dt, Math.min(tr * dt, da));
+        s.spd = Math.min(s.turn > 7 ? 760 : 560, s.spd + 600 * dt);
         s.x += Math.cos(s.a) * s.spd * dt; s.y += Math.sin(s.a) * s.spd * dt;
         fx({ x: s.x - Math.cos(s.a) * 10, y: s.y - Math.sin(s.a) * 10, vx: -Math.cos(s.a) * 50, vy: -Math.sin(s.a) * 50, life: 0.18, max: 0.18, size: 4, color: Math.random() < 0.5 ? "#ffb03b" : "#ff5d5d", shape: "dot", g: 0 });
         if (Math.random() < 0.7) fx({ x: s.x - Math.cos(s.a) * 8, y: s.y - Math.sin(s.a) * 8, vx: 0, vy: -10, life: 0.5, max: 0.5, size: 4, color: "#b8bcc8", puff: true });
         if (Math.hypot(s.tx - s.x, s.ty - s.y) < 12) {
           s.done = true;
+          const blast = s.blast || 30;
           if (s.target && !s.target.dead) damage(s.target, s.dmg, "#e0525b", s.lvl, { dodge: true });
-          for (const e of enemies) if (e !== s.target && Math.hypot(e.x - s.tx, e.y - s.ty) < 30) damage(e, s.dmg * 0.4, "#e0525b", s.lvl);
+          for (const e of enemies) if (e !== s.target && !e.dead && Math.hypot(e.x - s.tx, e.y - s.ty) < blast) damage(e, s.dmg * 0.4, "#e0525b", s.lvl);
+          if (s.rstun) for (const e of enemies) if (!e.dead && !ENEMIES[e.kind].boss && Math.hypot(e.x - s.tx, e.y - s.ty) < blast) applyStun(e, s.rstun, "zap");
           explode(s.tx, s.ty);
+          if (s.moon) { flash(s.tx, s.ty, blast * 1.4, "rgba(255,240,200,", 0.3); ring(s.tx, s.ty, 10, blast * 1.5, "rgba(255,150,60,", 0.5, 8); word(s.tx, s.ty - 50, "MOON SHOT!", "#e0525b", true); addShake(8); }
+          if (s.napalm) zones.push({ x: s.tx, y: s.ty, r: 34, life: 3, max: 3, dps: s.dmg * 0.25, tick: 0, lvl: s.lvl, seed: Math.random() * 6, fire: true });
           sfx("boom");
-          if (s.lvl >= 2) for (let i = 0; i < 3; i++) {
-            const a = Math.random() * Math.PI * 2, r = 30 + Math.random() * 25;
-            shots.push({ kind: "bomblet", sx: s.tx, sy: s.ty, tx: s.tx + Math.cos(a) * r, ty: s.ty + Math.sin(a) * r, p: -i * 0.06, dur: 0.32, dmg: s.dmg * 0.3, lvl: s.lvl, x: s.tx, y: s.ty });
+          for (let i = 0; i < (s.bomblets || 0); i++) {
+            const a = Math.random() * Math.PI * 2, r = 30 + Math.random() * 30;
+            shots.push({ kind: "bomblet", sx: s.tx, sy: s.ty, tx: s.tx + Math.cos(a) * r, ty: s.ty + Math.sin(a) * r, p: -i * 0.05, dur: 0.32, dmg: s.dmg * 0.3 * (s.bombletMul || 1), lvl: s.lvl, x: s.tx, y: s.ty });
           }
         }
         if (s.x < -50 || s.x > W + 50 || s.y < -50 || s.y > H + 50) s.done = true;
+      } else if (s.kind === "hbolt" || s.kind === "pencil") {
+        if (s.target && !s.target.dead) { s.tx = s.target.x; s.ty = s.target.y; }
+        const dx = s.tx - s.x, dy = s.ty - s.y, d = Math.hypot(dx, dy), step = s.spd * dt;
+        s.a = Math.atan2(dy, dx); s.rot += dt * 14;
+        if (s.kind === "hbolt") fx({ x: s.x, y: s.y, vx: 0, vy: 0, life: 0.3, max: 0.3, size: 4, color: RAINBOW[Math.floor(Math.random() * 6)], shape: "dot", g: 0 });
+        if (d <= step + 4) {
+          s.done = true;
+          if (s.target && !s.target.dead) damage(s.target, s.dmg, s.kind === "hbolt" ? "#b45ccc" : "#b07a00", 1, { hero: true, dodge: true });
+          if (s.kind === "hbolt") {
+            burst(s.tx, s.ty, 6, RAINBOW, 140, "spark");
+            flash(s.tx, s.ty, 16 + s.splash * 0.5, "rgba(255,170,230,", 0.12);
+            if (s.splash) {
+              for (const e of enemies) if (e !== s.target && !e.dead && Math.hypot(e.x - s.tx, e.y - s.ty) <= s.splash) damage(e, s.dmg * 0.5, "#b45ccc", 1, { hero: true });
+              ring(s.tx, s.ty, 4, s.splash, "rgba(214,120,255,", 0.25, 3);
+            }
+          } else burst(s.tx, s.ty, 5, ["#f2c14e", "#d9a066", "#ff9ec4"], 120, "shard");
+        } else { s.x += dx / d * step; s.y += dy / d * step; }
+      } else if (s.kind === "wish" || s.kind === "meteor" || s.kind === "comet") {
+        if (s.target && !s.target.dead) { s.tx = s.target.x; s.ty = s.target.y; }
+        s.p += dt / s.dur;
+        const p = Math.max(0, Math.min(1, s.p));
+        s.x = s.sx + (s.tx - s.sx) * p; s.y = s.sy + (s.ty - s.sy) * p; s.rot += dt * 8;
+        fx({ x: s.x + (Math.random() - 0.5) * 10, y: s.y + (Math.random() - 0.5) * 10, vx: (Math.random() - 0.5) * 30, vy: -20, life: 0.5, max: 0.5, size: s.kind === "wish" ? 6 : 7, color: trailColor(s.kind), shape: s.kind === "meteor" ? "dot" : "spark", g: 0, rot: Math.random() * 6 });
+        if (s.p >= 1) { s.done = true; if (s.kind === "wish") wishImpact(s); else if (s.kind === "comet") cometImpact(s); else meteorImpact(s); }
+      } else if (s.kind === "orb") {
+        if (s.target && !s.target.dead) { s.tx = s.target.x; s.ty = s.target.y; }
+        const dx = s.tx - s.x, dy = s.ty - s.y, d = Math.hypot(dx, dy);
+        s.life -= dt; s.zap -= dt;
+        if (d > 4) { s.x += dx / d * s.spd * dt; s.y += dy / d * s.spd * dt; }
+        if (s.zap <= 0) {
+          s.zap = 0.15;
+          let nx = null, bd = 75;
+          for (const e of enemies) { if (e.dead) continue; const dd = Math.hypot(e.x - s.x, e.y - s.y); if (dd < bd) { bd = dd; nx = e; } }
+          if (nx) { damage(nx, s.dmg, "#3d7bff", s.lvl, { quiet: true }); bolts.push({ pts: [[s.x, s.y], [nx.x, nx.y]], life: 0.12, max: 0.12 }); }
+        }
+        if (s.life <= 0 || d < 10) {
+          s.done = true;
+          flash(s.x, s.y, 40, "rgba(150,195,255,", 0.2); ring(s.x, s.y, 6, 60, "rgba(120,170,255,", 0.35, 4);
+          for (const e of enemies) if (!e.dead && Math.hypot(e.x - s.x, e.y - s.y) < 60) damage(e, s.dmg * 3, "#3d7bff", s.lvl);
+          sfx("zap");
+        }
       } else if (s.kind === "bomblet") {
         s.p += dt / s.dur;
         const p = Math.max(0, Math.min(1, s.p));
@@ -1774,8 +2595,8 @@
 
     for (const z of zones) {
       z.life -= dt; z.tick -= dt;
-      if (z.tick <= 0) { z.tick = 0.25; for (const e of enemies) if (!e.dead && Math.hypot(e.x - z.x, e.y - z.y) <= z.r) damage(e, z.dps * 0.25, "#8a55e8", z.lvl, { quiet: true }); }
-      if (Math.random() < dt * 6) fx({ x: z.x + (Math.random() - 0.5) * z.r, y: z.y + (Math.random() - 0.5) * z.r * 0.6, vx: 0, vy: -20, life: 0.5, max: 0.5, size: 3, color: RAINBOW[Math.floor(Math.random() * 6)], shape: "dot", g: 0 });
+      if (z.tick <= 0) { z.tick = 0.25; for (const e of enemies) if (!e.dead && Math.hypot(e.x - z.x, e.y - z.y) <= z.r) damage(e, z.dps * 0.25, z.fire ? "#e8630a" : "#8a55e8", z.lvl, { quiet: true }); }
+      if (Math.random() < dt * 6) fx({ x: z.x + (Math.random() - 0.5) * z.r, y: z.y + (Math.random() - 0.5) * z.r * 0.6, vx: 0, vy: -20, life: 0.5, max: 0.5, size: 3, color: z.fire ? (Math.random() < 0.5 ? "#ff8a3d" : "#ffd23f") : RAINBOW[Math.floor(Math.random() * 6)], shape: "dot", g: z.fire ? -40 : 0 });
     }
     zones = zones.filter((z) => z.life > 0);
     for (const b of bolts) b.life -= dt;
@@ -1783,7 +2604,7 @@
     if (newborn.length) { enemies.push(...newborn); newborn.length = 0; }
     for (const p of parts) {
       p.life -= dt;
-      if (!p.ring && !p.flash && !p.ghost && !p.slash) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g ?? (p.puff ? 0 : 260)) * dt; p.vx *= 0.97; if (p.g === 0) p.vy *= 0.97; p.rot = (p.rot || 0) + dt * 8; }
+      if (!p.ring && !p.flash && !p.ghost && !p.slash && !p.pillar && !p.orbital) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += (p.g ?? (p.puff ? 0 : 260)) * dt; p.vx *= 0.97; if (p.g === 0) p.vy *= 0.97; p.rot = (p.rot || 0) + dt * 8; }
     }
     parts = parts.filter((p) => p.life > 0);
     for (const t of texts) { t.life -= dt; t.y -= dt * (t.num ? 40 : t.comic ? 10 : 18); if (t.vx) t.x += t.vx * dt; }
@@ -1861,15 +2682,15 @@
     drawDecals();
     for (const z of zones) {
       ctx.save(); ctx.translate(z.x, z.y); ctx.globalAlpha = 0.45 * Math.min(1, z.life / 0.5);
-      RAINBOW.forEach((col, i) => { const k = 1 - i * 0.13; ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(Math.sin(t * 2 + z.seed + i) * 2, 0, z.r * k, z.r * 0.55 * k, 0, 0, 7); ctx.fill(); });
+      (z.fire ? FIRE : RAINBOW).forEach((col, i) => { const k = (1 - i * (z.fire ? 0.2 : 0.13)) * (z.fire ? 0.9 + Math.sin(t * 20 + i + z.seed) * 0.1 : 1); ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(Math.sin(t * 2 + z.seed + i) * 2, 0, z.r * k, z.r * 0.55 * k, 0, 0, 7); ctx.fill(); });
       ctx.restore();
     }
 
-    if (selected) rangeCircle(selected.x, selected.y, stats(selected.type, selected.level).range, true);
+    if (selected) rangeCircle(selected.x, selected.y, rangeOf(selected), true);
 
     for (const h of towers) {
       if (h.type !== "heart") continue;
-      const hs = stats("heart", h.level);
+      const hs = h.st || getStats(h);
       ctx.save(); ctx.setLineDash([2, 7]); ctx.lineDashOffset = -t * 20; ctx.lineCap = "round";
       ctx.strokeStyle = "rgba(255,110,160,0.6)"; ctx.lineWidth = 2.5;
       for (const o of towers) if (o !== h && o.type !== "heart" && Math.hypot(o.x - h.x, o.y - h.y) <= hs.range) { ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(o.x, o.y); ctx.stroke(); }
@@ -1877,7 +2698,14 @@
     }
     for (const tw of towers.slice().sort((a, b) => a.y - b.y)) {
       const s = 1 + tw.pop * 0.25 + tw.kick * 0.06;
-      drawSticker(ctx, tw.type, tw.x, tw.y, s, tw.level, tw.rot + Math.sin(tw.kick * 9) * 0.1 * tw.kick, tw.pop * 6 + tw.kick * 2 + (tw === selected ? 3 : 0), 1, tw.sheen || 0);
+      const rot = tw.rot + Math.sin(tw.kick * 9) * 0.1 * tw.kick, lift = tw.pop * 6 + tw.kick * 2 + (tw === selected ? 3 : 0);
+      if (tw.type === "hero") drawHeroOnBoard(tw, s, rot, lift);
+      else drawSticker(ctx, tw.type, tw.x, tw.y, s, tw.level, rot, lift, 1, tw.sheen || 0);
+      if (frenzyT > 0) for (let k = 0; k < 2; k++) {
+        const a = t * 3 + k * Math.PI;
+        ctx.save(); ctx.translate(tw.x + Math.cos(a) * (R + 8), tw.y + Math.sin(a) * (R + 8) * 0.6);
+        starPath(ctx, 5, 0.45); ctx.fillStyle = "#ffd23f"; ctx.fill(); ctx.restore();
+      }
       if (tw.stun > 0) {
         ctx.save(); ctx.translate(tw.x, tw.y);
         ctx.globalAlpha = Math.min(1, tw.stun * 2) * 0.8;
@@ -1894,7 +2722,12 @@
     drawBolts();
 
     for (const s of shots) {
-      if (s.kind === "star") {
+      if (s.kind === "ice") {
+        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(Math.atan2(s.ty - s.y, s.tx - s.x));
+        ctx.fillStyle = "#bfe6ff"; ctx.strokeStyle = "#2f8fd6"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(8, 0); ctx.lineTo(0, -3); ctx.lineTo(-8, 0); ctx.lineTo(0, 3); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.restore();
+      } else if (s.kind === "star") {
         ctx.fillStyle = "rgba(255,210,60,0.3)"; ctx.beginPath(); ctx.arc(s.x, s.y, 11, 0, 7); ctx.fill();
         ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot);
         starPath(ctx, 7, 0.5); ctx.fillStyle = "#ffd23f"; ctx.fill(); ctx.strokeStyle = "#d48a00"; ctx.lineWidth = 1; ctx.stroke();
@@ -1916,6 +2749,40 @@
         ctx.fillStyle = "#ff5d5d"; ctx.beginPath(); ctx.ellipse(0, 0, 9, 4, 0, 0, 7); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(2, 0, 1.8, 0, 7); ctx.fill();
         ctx.restore();
+      } else if (s.kind === "hbolt") {
+        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot);
+        ctx.fillStyle = "rgba(255,160,230,0.35)"; ctx.beginPath(); ctx.arc(0, 0, 11, 0, 7); ctx.fill();
+        starPath(ctx, 7, 0.45); ctx.fillStyle = RAINBOW[Math.floor(performance.now() / 60) % 6]; ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0, 0, 2.2, 0, 7); ctx.fill();
+        ctx.restore();
+      } else if (s.kind === "pencil") {
+        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.a || 0);
+        ctx.fillStyle = "#f2c14e"; ctx.fillRect(-9, -2.5, 14, 5);
+        ctx.fillStyle = "#ff9ec4"; ctx.fillRect(-12, -2.5, 3, 5);
+        ctx.fillStyle = "#e8d2b0"; ctx.beginPath(); ctx.moveTo(5, -2.5); ctx.lineTo(10, 0); ctx.lineTo(5, 2.5); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#333"; ctx.beginPath(); ctx.moveTo(8.5, -0.8); ctx.lineTo(10, 0); ctx.lineTo(8.5, 0.8); ctx.closePath(); ctx.fill();
+        ctx.restore();
+      } else if (s.kind === "wish") {
+        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot);
+        const g = ctx.createRadialGradient(0, 0, 4, 0, 0, 46); g.addColorStop(0, "rgba(255,250,200,0.9)"); g.addColorStop(1, "rgba(255,210,60,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 46, 0, 7); ctx.fill();
+        starPath(ctx, 26, 0.48); ctx.fillStyle = "#ffd23f"; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = "#fff"; ctx.stroke();
+        ctx.restore();
+      } else if (s.kind === "orb") {
+        const og = ctx.createRadialGradient(s.x, s.y, 2, s.x, s.y, 18);
+        og.addColorStop(0, "rgba(255,255,255,0.95)"); og.addColorStop(0.4, "rgba(140,190,255,0.8)"); og.addColorStop(1, "rgba(80,130,255,0)");
+        ctx.fillStyle = og; ctx.beginPath(); ctx.arc(s.x, s.y, 18, 0, 7); ctx.fill();
+        ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1.2;
+        for (let k = 0; k < 3; k++) { const a = Math.random() * 6.28; ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + Math.cos(a) * 14, s.y + Math.sin(a) * 14); ctx.stroke(); }
+      } else if (s.kind === "meteor" || s.kind === "comet") {
+        const cm = s.kind === "comet";
+        const ang = Math.atan2(s.ty - s.sy, s.tx - s.sx);
+        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(ang);
+        const g = ctx.createLinearGradient(-60, 0, 0, 0); g.addColorStop(0, cm ? "rgba(159,220,255,0)" : "rgba(255,138,61,0)"); g.addColorStop(1, cm ? "rgba(200,235,255,0.95)" : "rgba(255,170,60,0.9)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-60, -6); ctx.lineTo(0, -13); ctx.lineTo(0, 13); ctx.lineTo(-60, 6); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = cm ? "#7cc4f0" : "#6b4a3a"; ctx.beginPath(); ctx.arc(0, 0, 12, 0, 7); ctx.fill();
+        ctx.fillStyle = cm ? "#ffffff" : "#ffb03b"; ctx.beginPath(); ctx.arc(3, -2, 6, 0, 7); ctx.fill();
+        ctx.restore();
       } else if (s.kind === "bomblet") {
         ctx.fillStyle = "#2b2d36"; ctx.beginPath(); ctx.arc(s.x, s.y, 4, 0, 7); ctx.fill();
         ctx.fillStyle = Math.random() < 0.5 ? "#ffd23f" : "#ff8a3d"; ctx.beginPath(); ctx.arc(s.x + 3, s.y - 4, 2, 0, 7); ctx.fill();
@@ -1935,6 +2802,15 @@
       } else if (p.puff) {
         ctx.globalAlpha = a * 0.6; ctx.fillStyle = p.color;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size * (2 - a), 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      } else if (p.orbital) {
+        const ow = 26 * a + 4;
+        const og = ctx.createLinearGradient(p.x - ow, 0, p.x + ow, 0);
+        og.addColorStop(0, "rgba(255,93,93,0)"); og.addColorStop(0.5, `rgba(255,240,240,${a.toFixed(3)})`); og.addColorStop(1, "rgba(255,93,93,0)");
+        ctx.fillStyle = og; ctx.fillRect(p.x - ow, -20, ow * 2, p.y + 20);
+      } else if (p.pillar) {
+        const g = ctx.createLinearGradient(0, p.y - 260, 0, p.y);
+        g.addColorStop(0, "rgba(255,225,120,0)"); g.addColorStop(1, `rgba(255,225,120,${(a * 0.7).toFixed(3)})`);
+        ctx.fillStyle = g; const pw = 30 + (1 - a) * 30; ctx.fillRect(p.x - pw / 2, p.y - 260, pw, 260);
       } else if (p.slash) {
         const k = 0.4 + (1 - a) * 0.6;
         ctx.save(); ctx.translate(p.x, p.y); ctx.lineCap = "round";
@@ -1948,7 +2824,8 @@
         ctx.beginPath(); ctx.arc(-13, -6, 7, 0, 7); ctx.arc(-13, 6, 7, 0, 7); ctx.fill();
         ctx.restore();
       } else if (p.shape === "sticker") {
-        drawSticker(ctx, p.type, p.x, p.y, 0.55 + a * 0.55, p.level, p.rot, 4 + a * 10, Math.min(1, a * 1.6));
+        if (p.type === "hero") drawHero(ctx, p.hero, p.x, p.y, 0.55 + a * 0.55, p.level, p.rot, 4 + a * 10, Math.min(1, a * 1.6));
+        else drawSticker(ctx, p.type, p.x, p.y, 0.55 + a * 0.55, p.level, p.rot, 4 + a * 10, Math.min(1, a * 1.6));
       } else {
         ctx.save(); ctx.globalAlpha = Math.min(1, a * 1.5); ctx.translate(p.x, p.y);
         ctx.fillStyle = p.color;
@@ -1983,8 +2860,9 @@
 
     if (placing && hover.inside && started && !over) {
       const ok = !canPlace(hover.x, hover.y) && coins >= TYPES[placing].cost;
-      rangeCircle(hover.x, hover.y, stats(placing, 1).range, ok);
-      drawSticker(ctx, placing, hover.x, hover.y - 6, 1.12, 1, -0.08, 9, ok ? 0.95 : 0.45);
+      rangeCircle(hover.x, hover.y, TYPES[placing].range, ok);
+      if (placing === "hero") drawHero(ctx, heroId, hover.x, hover.y - 6, 1.12, 1, 0, 9, ok ? 0.95 : 0.45);
+      else drawSticker(ctx, placing, hover.x, hover.y - 6, 1.12, 1, -0.08, 9, ok ? 0.95 : 0.45);
     }
 
     ctx.textAlign = "center"; ctx.lineJoin = "round";
@@ -2008,6 +2886,13 @@
     }
     ctx.globalAlpha = 1; ctx.textAlign = "left";
 
+    if (stormT > 0) { ctx.fillStyle = `rgba(214,120,255,${Math.min(0.1, stormT * 0.05).toFixed(3)})`; ctx.fillRect(-20, -20, W + 40, H + 40); }
+    if (frenzyT > 0) {
+      const fg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.65);
+      fg.addColorStop(0, "rgba(255,210,60,0)"); fg.addColorStop(1, `rgba(255,200,40,${(0.22 + Math.sin(t * 6) * 0.06).toFixed(3)})`);
+      ctx.fillStyle = fg; ctx.fillRect(-20, -20, W + 40, H + 40);
+    }
+    if (quizFlash > 0) { ctx.fillStyle = `rgba(255,255,255,${(quizFlash * 0.55).toFixed(3)})`; ctx.fillRect(-20, -20, W + 40, H + 40); }
     if (vignette > 0) {
       const g = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.65);
       g.addColorStop(0, "rgba(224,82,91,0)"); g.addColorStop(1, `rgba(224,82,91,${(vignette * 0.45).toFixed(3)})`);
@@ -2050,6 +2935,121 @@
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); selectType(type); }
     });
   });
+  const heroBtn = document.createElement("button");
+  heroBtn.type = "button"; heroBtn.className = "sticker hero-st"; heroBtn.id = "st-hero";
+  const heroCv = document.createElement("canvas"); heroCv.width = 112; heroCv.height = 112;
+  const heroNm = document.createElement("span"); heroNm.className = "nm";
+  const heroCost = document.createElement("span"); heroCost.className = "cost";
+  const heroTag = document.createElement("span"); heroTag.className = "tag"; heroTag.textContent = "HERO";
+  heroBtn.append(heroCv, heroNm, heroCost, heroTag);
+  sheet.appendChild(heroBtn);
+  function refreshHeroButton() {
+    const c2 = heroCv.getContext("2d"); c2.setTransform(2, 0, 0, 2, 0, 0); c2.clearRect(0, 0, 56, 56);
+    drawHero(c2, heroId, 28, 28, 0.85, 1, 0, 2);
+    heroNm.textContent = HEROES[heroId].name.replace("Professor ", "Prof. ");
+    heroBtn.setAttribute("aria-label", `Hero: ${HEROES[heroId].name}, costs ${TYPES.hero.cost} glitter. Shortcut H`);
+  }
+  heroBtn.addEventListener("pointerdown", (e) => {
+    if (!started || over || menuOpen) return;
+    e.preventDefault(); ensureAudio();
+    const h = heroTower();
+    if (h) { selected = h; placing = null; h.pop = 0.35; updateInfo(true); return; }
+    selected = null; placing = "hero";
+    drag.active = true; drag.moved = false; drag.sx = e.clientX; drag.sy = e.clientY;
+    try { heroBtn.releasePointerCapture(e.pointerId); } catch (err) {}
+    updateInfo(true);
+  });
+  heroBtn.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); heroKey(); } });
+  function heroKey() {
+    if (!started || over) return;
+    const h = heroTower();
+    if (h) { selected = h; placing = null; updateInfo(true); } else selectType("hero");
+  }
+
+  const abBox = $("abilities");
+  const abBtns = [0, 1].map((i) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "ability";
+    const cv = document.createElement("canvas"); cv.width = 80; cv.height = 80;
+    const an = document.createElement("span"); an.className = "an";
+    const as = document.createElement("span"); as.className = "as";
+    b.append(cv, an, as); abBox.appendChild(b);
+    b.addEventListener("click", () => { ensureAudio(); useAbility(i); });
+    return { b, cv, an, as, key: "", hero: "" };
+  });
+  function drawAbilityIcon(cv, hero, i) {
+    const c = cv.getContext("2d"); c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, 40, 40);
+    c.fillStyle = HERO_BG[hero]; c.beginPath(); c.arc(20, 20, 19, 0, 7); c.fill();
+    c.translate(20, 20); c.lineCap = "round";
+    const k = hero + i;
+    if (k === "sparkle0") {
+      [[-7, -6, 5, "#ff9ec4"], [6, -3, 6, "#c89bff"], [-1, 8, 5, "#ffd23f"]].forEach(([x, y, r, col]) => { c.save(); c.translate(x, y); starPath(c, r, 0.45); c.fillStyle = col; c.fill(); c.restore(); });
+    } else if (k === "sparkle1") {
+      c.strokeStyle = "rgba(255,190,60,0.6)"; c.lineWidth = 4; c.beginPath(); c.moveTo(14, -14); c.lineTo(2, -2); c.stroke();
+      starPath(c, 11, 0.45); c.fillStyle = "#ffd23f"; c.fill(); c.strokeStyle = "#c98a00"; c.lineWidth = 1.2; c.stroke();
+    } else if (k === "rex0") {
+      c.strokeStyle = "#5d7a2a"; c.lineWidth = 2.5;
+      for (const r of [6, 11, 16]) { c.beginPath(); c.arc(-10, 0, r, -0.7, 0.7); c.stroke(); }
+    } else if (k === "rex1") {
+      c.fillStyle = "rgba(255,138,61,0.7)"; c.beginPath(); c.moveTo(16, -16); c.lineTo(6, -2); c.lineTo(-2, 4); c.closePath(); c.fill();
+      c.fillStyle = "#6b4a3a"; c.beginPath(); c.arc(-2, 4, 8, 0, 7); c.fill();
+      c.fillStyle = "#ffb03b"; c.beginPath(); c.arc(0, 2, 3.5, 0, 7); c.fill();
+    } else if (k === "hoot0") {
+      c.fillStyle = "#24357f"; c.font = '26px "Bagel Fat One", "Arial Rounded MT Bold", sans-serif'; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("?", 0, 2);
+    } else {
+      starPath(c, 12, 0.45); c.fillStyle = "#ffd23f"; c.fill();
+      c.fillStyle = "#24357f"; c.font = '11px "Bagel Fat One", "Arial Rounded MT Bold", sans-serif'; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("x2", 0, 1);
+    }
+  }
+  function updateAbilities() {
+    const h = heroTower();
+    if (abBox.hidden !== !h) abBox.hidden = !h;
+    if (!h) return;
+    abBtns.forEach((o, i) => {
+      const ab = HEROES[h.hero].abilities[i];
+      const locked = h.hlvl < ab.lvl, cd = h.abCd[i];
+      const st = locked ? `Unlocks at level ${ab.lvl}` : cd > 0 ? `Recharging · ${Math.ceil(cd)}s` : "Ready!";
+      const key = h.hero + st;
+      if (key !== o.key) {
+        o.key = key;
+        o.an.textContent = ab.name; o.as.textContent = st;
+        o.b.disabled = locked;
+        o.b.classList.toggle("ready", !locked && cd <= 0);
+        o.b.setAttribute("aria-label", `${ab.name}: ${ab.desc}. ${st} Shortcut ${i ? "E" : "Q"}`);
+        o.b.title = `${ab.name}: ${ab.desc}`;
+        if (o.hero !== h.hero) { o.hero = h.hero; drawAbilityIcon(o.cv, h.hero, i); }
+      }
+      o.b.style.setProperty("--cd", locked ? "0" : (cd / ab.cd).toFixed(3));
+    });
+  }
+  function renderHeroPicker(container) {
+    container.innerHTML = "";
+    for (const id of Object.keys(HEROES)) {
+      const hd = HEROES[id];
+      const b = document.createElement("button"); b.type = "button"; b.className = "hero-pick";
+      b.setAttribute("aria-pressed", String(settings.hero === id));
+      const cv = document.createElement("canvas"); cv.width = 104; cv.height = 104;
+      const c = cv.getContext("2d"); c.scale(2, 2); drawHero(c, id, 26, 26, 0.8, 1, 0, 2);
+      const nb = document.createElement("b"); nb.textContent = hd.name;
+      const r1 = document.createElement("span"); r1.textContent = hd.role;
+      const r2 = document.createElement("span"); r2.textContent = `${hd.cost} glitter · ${hd.abilities.map((a) => a.name).join(", ")}`;
+      b.append(cv, nb, r1, r2);
+      b.addEventListener("click", () => pickHero(id));
+      container.appendChild(b);
+    }
+  }
+  function updateHeroNote() {
+    const h = heroTower();
+    $("heroNote").textContent = h && h.hero !== settings.hero
+      ? `${HEROES[settings.hero].name} will join your next game.`
+      : "Heroes level up by themselves during waves and learn two powers. One hero per game.";
+  }
+  function pickHero(id) {
+    settings.hero = id; saveSettings();
+    if (!heroTower()) { heroId = id; setHeroType(id); refreshHeroButton(); if (placing === "hero") updateInfo(true); }
+    renderHeroPicker($("startHeroes")); renderHeroPicker($("menuHeroes"));
+    updateHeroNote();
+  }
+
   function selectType(type) {
     if (!started || over) return;
     ensureAudio();
@@ -2108,31 +3108,22 @@
   function updateInfo(force) {
     const actions = $("infoActions");
     let title, text, key;
-    if (selected) {
-      const s = stats(selected.type, selected.level);
-      title = `${TYPES[selected.type].name} · ${["Paper", "Silver foil", "Gold foil"][selected.level - 1]}`;
-      const ty = selected.type;
-      const dmgTxt = ty === "snow" ? `slows to ${Math.round(s.slow * 100)}% speed`
-        : ty === "heart" ? `nearby stickers fire ${Math.round((1 / s.haste - 1) * 100)}% faster${s.dmgMul > 1 ? " and hit 25% harder" : ""}`
-        : ty === "sun" ? `${Math.round(s.dmg)}–${Math.round(s.dmg * 3)} damage per second`
-        : ty === "zap" ? `${Math.round(s.dmg)} damage, chains to ${s.chains}`
-        : `${Math.round(s.dmg)} damage`;
-      text = `${dmgTxt} · range ${Math.round(s.range)}${s.rate ? ` · every ${s.rate.toFixed(2)}s` : ""}`;
-      const perks = TYPES[ty].perks;
-      text += selected.level < 3 ? ` · Next: ${perks[selected.level]}` : ` · ${perks[2]}`;
-      if (selected.buffed) text += " · boosted by a heart";
-      if (selected.stun > 0) text += " · smudged by an eraser";
-      key = `sel|${towers.indexOf(selected)}|${selected.level}|${coins >= (selected.level < 3 ? upgradeCost(selected) : Infinity)}|${selected.stun > 0}|${!!selected.buffed}`;
+    if (selected && selected.type === "hero") {
+      const hd = HEROES[selected.hero], L = selected.hlvl;
+      title = `${hd.name} · Level ${L}`;
+      text = L < 10 ? `XP ${Math.floor(selected.xp)} of ${xpNeed(L)} · Next: ${hd.levels[L + 1]}` : "Max level. Legendary!";
+      text += " · " + hd.abilities.map((ab) => L >= ab.lvl ? `${ab.name}: ${ab.desc}` : `${ab.name} unlocks at level ${ab.lvl}`).join(" · ");
+      if (selected.stun > 0) text += " · knocked out for a moment";
+      key = `hero|${L}|${Math.floor(selected.xp / 5)}|${selected.stun > 0}`;
       if (force || key !== infoKey) {
-        actions.hidden = false;
-        const up = $("upBtn");
-        if (selected.level < 3) {
-          up.hidden = false;
-          up.textContent = `Upgrade · ${upgradeCost(selected)}`;
-          up.disabled = coins < upgradeCost(selected);
-        } else up.hidden = true;
+        actions.hidden = false; $("upBtn").hidden = true;
         $("sellBtn").textContent = `Peel off · +${refund(selected)}`;
       }
+    } else if (selected) {
+      title = TYPES[selected.type].name;
+      text = statLine(selected) + ". Buy its upgrades in the panel on the page.";
+      key = `sel|${towers.indexOf(selected)}|${selected.paths.join("")}|${selected.stun > 0}|${!!selected.buffed}`;
+      actions.hidden = true;
     } else if (placing) {
       const tp = TYPES[placing];
       title = `${tp.name} · ${tp.cost} glitter`;
@@ -2151,7 +3142,100 @@
       $("infoText").textContent = text;
     }
   }
-  $("upBtn").addEventListener("click", () => upgrade(selected));
+  $("upBtn").addEventListener("click", () => {});
+  function statLine(t) {
+    const st = getStats(t), ty = t.type;
+    const main = ty === "snow" ? `slows to ${Math.round(st.slow * 100)}% · ${Math.round(st.dmg)} damage`
+      : ty === "heart" ? `nearby stickers fire ${Math.round((1 / st.haste - 1) * 100)}% faster`
+      : ty === "sun" ? `${Math.round(st.dmg)}–${Math.round(st.dmg * (1 + st.maxHeat))} damage per second`
+      : ty === "zap" ? `${Math.round(st.dmg)} damage, chains to ${st.chains}`
+      : `${Math.round(st.dmg)} damage`;
+    return `${main} · range ${Math.round(st.range)}${st.rate ? ` · every ${st.rate.toFixed(2)}s` : ""}${t.buffed ? " · boosted" : ""}${t.stun > 0 ? " · knocked out" : ""}`;
+  }
+  const mk = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const upanel = $("upanel");
+  let panelKey = "";
+  function renderPanel() {
+    const t = selected && selected.type !== "hero" && towers.includes(selected) && started && !over ? selected : null;
+    if (!t) { if (!upanel.hidden) upanel.hidden = true; panelKey = ""; return; }
+    const side = t.x > W / 2 ? "left" : "right";
+    const states = [0, 1, 2].map((pi) => pathState(t, pi));
+    const key = [side, t.paths.join(""), states.map((st) => st.kind + (st.cost ? (coins >= st.cost) : "")).join(","), t.stun > 0, !!t.buffed].join("|");
+    if (key === panelKey) return;
+    panelKey = key;
+    upanel.hidden = false;
+    upanel.className = "upanel " + side;
+    upanel.innerHTML = "";
+    const head = mk("div", "up-head");
+    const cv = document.createElement("canvas"); cv.width = 80; cv.height = 80;
+    const c = cv.getContext("2d"); c.scale(2, 2); drawSticker(c, t.type, 20, 21, 0.62, t.level, -0.06, 1.5);
+    const close = mk("button", "up-close", "Close"); close.type = "button";
+    close.addEventListener("click", () => { selected = null; updateInfo(true); });
+    head.append(cv, mk("b", "", `${TYPES[t.type].name} ${t.paths.join("-")}`), close);
+    upanel.append(head, mk("div", "up-stats", statLine(t)));
+    PATHS[t.type].forEach((P, pi) => {
+      const st = states[pi];
+      const box = mk("div", "up-path");
+      const top = mk("div", "pn");
+      const pips = mk("span", "pips");
+      for (let k = 0; k < 5; k++) pips.append(mk("i", k < t.paths[pi] ? "on" : ""));
+      top.append(mk("span", "", P.name), pips);
+      box.append(top);
+      if (st.kind === "buy") {
+        const up = P.ups[st.tier - 1];
+        const bb = mk("button", "up-buy" + (coins < st.cost ? " poor" : ""));
+        bb.type = "button";
+        bb.append(mk("b", "", `${up[0]} · ${st.cost}`), mk("span", "", up[1]));
+        bb.setAttribute("aria-label", `Buy ${up[0]} for ${st.cost} glitter: ${up[1]}. Shortcut ${[",", ".", "/"][pi]}`);
+        bb.addEventListener("click", () => { ensureAudio(); buyUpgrade(t, pi); });
+        box.append(bb);
+      } else if (st.kind === "locked") {
+        box.append(mk("div", "up-note", `${P.ups[st.tier - 1][0]} is locked. Unlock it in Menu, Upgrade book, with ${TYPES[t.type].name} XP.`));
+      } else if (st.kind === "closed") {
+        box.append(mk("div", "up-note", "Path closed. One path can reach tier 5 and one other path tier 2."));
+      } else box.append(mk("div", "up-note done", `Complete: ${P.ups[4][0]}`));
+      upanel.append(box);
+    });
+    const sellB = mk("button", "up-sell", `Peel off · +${refund(t)}`); sellB.type = "button";
+    sellB.addEventListener("click", () => sell(t));
+    upanel.append(sellB);
+  }
+  let ubType = "star";
+  function renderUBook() {
+    const tabs = $("ubTabs"); tabs.innerHTML = "";
+    for (const type of ORDER) {
+      const tb = mk("button", "ub-tab"); tb.type = "button"; tb.setAttribute("aria-pressed", String(type === ubType));
+      const cv = document.createElement("canvas"); cv.width = 56; cv.height = 56;
+      const c = cv.getContext("2d"); c.scale(2, 2); drawSticker(c, type, 14, 15, 0.45, 1, -0.06, 1);
+      tb.append(cv, mk("span", "", TYPES[type].name));
+      if (canUnlockAny(type)) tb.append(mk("i", "dot"));
+      tb.addEventListener("click", () => { ubType = type; renderUBook(); });
+      tabs.append(tb);
+    }
+    $("ubXp").textContent = `${TYPES[ubType].name} XP: ${Math.floor(prog.txp[ubType] || 0)}`;
+    const grid = $("ubGrid"); grid.innerHTML = "";
+    PATHS[ubType].forEach((P, pi) => {
+      const row = mk("div", "ub-path");
+      row.append(mk("div", "ub-pn", P.name));
+      const cells = mk("div", "ub-cells");
+      const un = unlockedTier(ubType, pi);
+      P.ups.forEach((up, k) => {
+        const tier = k + 1;
+        const cell = mk("button", "ub-cell"); cell.type = "button";
+        cell.append(mk("b", "", `${tier}. ${up[0]}`), mk("span", "", up[1]));
+        if (tier <= un) { cell.classList.add("on"); cell.append(mk("em", "", "Unlocked")); cell.disabled = true; }
+        else if (tier === un + 1) {
+          const cost = XP_COST[k], ok = (prog.txp[ubType] || 0) >= cost;
+          cell.classList.add(ok ? "can" : "next");
+          cell.append(mk("em", "", `Unlock · ${cost} XP`));
+          cell.disabled = !ok;
+          cell.addEventListener("click", () => unlockNext(ubType, pi));
+        } else { cell.classList.add("locked"); cell.append(mk("em", "", "Locked")); cell.disabled = true; }
+        cells.append(cell);
+      });
+      row.append(cells); grid.append(row);
+    });
+  }
   $("sellBtn").addEventListener("click", () => sell(selected));
   $("waveBtn").addEventListener("click", () => { ensureAudio(); startWave(); });
 
@@ -2257,6 +3341,7 @@
     menuOpen = true;
     placing = null;
     renderMaps($("menuMaps"), "menu");
+    renderHeroPicker($("menuHeroes")); updateHeroNote(); renderUBook();
     renderBook();
     syncSettingsUI();
     $("menu").hidden = false;
@@ -2285,10 +3370,10 @@
     placing = null; selected = null; autoT = 0;
     if (won) {
       $("endTitle").textContent = "Homework saved!";
-      $("endText").textContent = `You held off all ${MAX_WAVE} waves on the ${MAPS[mapId].name.toLowerCase()} with ${lives} ${lives === 1 ? "life" : "lives"} to spare.`;
+      $("endText").textContent = `Your stickers earned XP for the Upgrade book. You held off all ${MAX_WAVE} waves on the ${MAPS[mapId].name.toLowerCase()} with ${lives} ${lives === 1 ? "life" : "lives"} to spare.`;
     } else {
       $("endTitle").textContent = "The doodles took over";
-      $("endText").textContent = `Your homework is a scribbly mess. You made it to wave ${wave}. Best on this page: wave ${prog.best[mapId] || wave}.`;
+      $("endText").textContent = `Your stickers still earned XP for the Upgrade book. Your homework is a scribbly mess. You made it to wave ${wave}. Best on this page: wave ${prog.best[mapId] || wave}.`;
     }
     $("startCard").hidden = true; $("endCard").hidden = false;
     $("overlay").hidden = false;
@@ -2306,9 +3391,14 @@
       if (ae && ae.tagName === "BUTTON") return;
       e.preventDefault(); startWave();
     }
+    else if (k === "h" || k === "H") heroKey();
+    else if (k === "q" || k === "Q") useAbility(0);
+    else if (k === "e" || k === "E") useAbility(1);
     else if (k === "Escape") { placing = null; selected = null; updateInfo(true); }
     else if (k === "a" || k === "A") toggleSetting("auto");
-    else if (k === "u" || k === "U") upgrade(selected);
+    else if (k === "," || k === "<") buyUpgrade(selected, 0);
+    else if (k === "." || k === ">") buyUpgrade(selected, 1);
+    else if (k === "/" || k === "?") buyUpgrade(selected, 2);
     else if (k === "Backspace" || k === "Delete") { if (selected) { e.preventDefault(); sell(selected); } }
     else if (k === "p" || k === "P") paused = true;
   });
@@ -2338,6 +3428,14 @@
       b.classList.toggle("poor", coins < TYPES[type].cost);
       b.classList.toggle("active", placing === type);
     }
+    const hPlaced = !!heroTower();
+    heroBtn.classList.toggle("placed", hPlaced);
+    heroBtn.classList.toggle("poor", !hPlaced && coins < TYPES.hero.cost);
+    heroBtn.classList.toggle("active", placing === "hero");
+    const ct = hPlaced ? "Placed" : String(TYPES.hero.cost);
+    if (heroCost.textContent !== ct) heroCost.textContent = ct;
+    updateAbilities();
+    renderPanel();
   }
 
   // ---------- Loop ----------
@@ -2350,6 +3448,7 @@
       else for (let i = 0; i < settings.speed; i++) update(dt);
       shake = Math.max(0, shake - dt * 25);
       vignette = Math.max(0, vignette - dt * 1.8);
+      quizFlash = Math.max(0, quizFlash - dt * 1.5);
     }
     render(now);
     hud();
@@ -2365,11 +3464,15 @@
       coins = data.coins ?? coins; lives = data.lives ?? lives;
       wave = Math.max(0, (data.wave ?? 0) - (data.waveActive ? 1 : 0));
       const flip = !!data.portrait !== portrait;
-      towers = (data.towers || []).filter((t) => TYPES[t.type]).map((t) => ({ ...t, x: flip ? t.y : t.x, y: flip ? t.x : t.y, cd: 0.2, pop: 0, kick: 0, sheen: 0, stun: 0 }));
+      towers = (data.towers || []).filter((t) => TYPES[t.type]).map((t) => ({ ...t, x: flip ? t.y : t.x, y: flip ? t.x : t.y, cd: 0.2, pop: 0, kick: 0, sheen: 0, stun: 0, abCd: [0, 0], paths: t.paths || [0, 0, 0] }));
+      towers.forEach((t) => { if (t.type !== "hero") t.level = artLevel(t); });
+      const rh = towers.find((t) => t.type === "hero");
+      if (rh) { heroId = rh.hero; setHeroType(heroId); refreshHeroButton(); }
       started = true;
       $("overlay").hidden = true;
     }
     renderMaps($("startMaps"), "start");
+    renderHeroPicker($("startHeroes"));
     syncSettingsUI();
     new ResizeObserver(resize).observe(stage);
     window.addEventListener("resize", applyOrientation);
@@ -2381,7 +3484,7 @@
   }
   window.claude?.hot?.snapshot?.(() => ({
     started, over, mapId, portrait, coins, lives, wave, waveActive,
-    towers: towers.map(({ type, x, y, level, rot, spent }) => ({ type, x, y, level, rot, spent })),
+    towers: towers.map(({ type, x, y, level, rot, spent, hero, hlvl, xp, paths }) => ({ type, x, y, level, rot, spent, hero, hlvl, xp, paths })),
   }));
   window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 })();
