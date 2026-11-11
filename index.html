@@ -436,7 +436,7 @@
     </section>
     <section>
       <h3>Upgrade book <small id="ubXp"></small></h3>
-      <p class="small">Stickers earn XP for every wave they spend on the page. Spend it here to unlock tiers 3, 4 and 5 of each upgrade path. Tiers 1 and 2 are always open.</p>
+      <p class="small">Every sticker earns XP for each wave it spends on the page, even when you call the next wave early. Spend it here to unlock tiers 3, 4 and 5 of each upgrade path. Tiers 1 and 2 are always open.</p>
       <div class="ub-tabs" id="ubTabs"></div>
       <div class="ub-grid" id="ubGrid"></div>
     </section>
@@ -531,7 +531,7 @@
   // ---------- Upgrade paths: 3 per sticker, 5 tiers each ----------
   // Rule: one path may reach tier 5, one other path tier 2. Tiers 3-5 must be unlocked with that sticker's XP.
   const TIER_COST = [0.6, 0.9, 2.2, 4.5, 11];
-  const XP_COST = [0, 0, 150, 400, 1000];
+  const XP_COST = [0, 0, 100, 250, 600];
   const PATHS = {
     star: [
       { name: "Sharp Points", ups: [
@@ -894,7 +894,7 @@
     coins = MAPS[mapId].startCoins; lives = 20; wave = 0; waveActive = false; queue = []; waveTime = 0;
     spawnN = 0; autoT = 0; lostThisWave = false;
     towers = []; enemies = []; shots = []; parts = []; texts = []; decals = []; bolts = []; zones = []; newborn = []; seen = {}; drops = []; jarTotal = 0;
-    timers = []; clock = 0; stormT = 0; frenzyT = 0; quizFlash = 0; xpHinted = false;
+    rewardedWave = 0; timers = []; clock = 0; stormT = 0; frenzyT = 0; quizFlash = 0; xpHinted = false;
     shake = 0; vignette = 0; hitstop = 0;
     over = false; won = false; placing = null; selected = null;
     heroId = settings.hero; setHeroType(heroId); refreshHeroButton();
@@ -1859,6 +1859,7 @@
     if (over || !started || wave >= MAX_WAVE) return;
     if (waveActive) {
       if (queue.length) return;
+      if (rewardedWave < wave) waveRewards();
       const b = earlyBonus();
       coins += b;
       say(W / 2, 92, `Called early! +${b} glitter`, "#2f8a4c", 1.6, 24);
@@ -2420,6 +2421,35 @@
     c.restore();
   }
 
+  // Rewards for finishing a wave: given when it clears, or straight away when the next wave is called early
+  let rewardedWave = 0;
+  const stickerXP = () => 25 + wave * 6;
+  function waveRewards() {
+    rewardedWave = wave;
+    for (const t of towers) if (t.type === "jar" && t.st) {
+      while ((t.made || 0) < t.st.piles) makeDrop(t);
+      if (t.st.bank && t.bank > 0) {
+        const gain = Math.min(t.st.cap, Math.floor(t.bank * (1 + t.st.interest))) - Math.floor(t.bank);
+        t.bank = Math.min(t.st.cap, t.bank + gain);
+        if (gain > 0) say(t.x, t.y - 46, `+${gain} interest`, "#2f8a4c", 1.6, 17);
+      }
+    }
+    const gained = {};
+    for (const t of towers) if (t.type !== "hero") gained[t.type] = (gained[t.type] || 0) + stickerXP();
+    for (const ty in gained) prog.txp[ty] = (prog.txp[ty] || 0) + gained[ty];
+    saveProg();
+    const shown = new Set();
+    for (const t of towers) if (t.type !== "hero" && !shown.has(t.type)) { shown.add(t.type); say(t.x, t.y + 34, `+${gained[t.type]} XP`, "#7a3fc0", 1.4, 15); }
+    for (const t of towers) if (t.type === "heart" && t.st) {
+      if (t.st.waveGlitter) { coins += t.st.waveGlitter; say(t.x, t.y - 34, `+${t.st.waveGlitter} glitter`, "#8a5d00", 1.5, 18); }
+      if (t.st.lifeWave) { lives += t.st.lifeWave; say(t.x, t.y - 54, `+${t.st.lifeWave} life`, "#e0525b", 1.5, 18); }
+    }
+    if (!xpHinted && ORDER.some(canUnlockAny)) { xpHinted = true; toast("Your stickers earned enough XP to unlock an upgrade. Open Menu, then the Upgrade book."); }
+    gainXP(40 + wave * 5);
+    const hh = heroTower();
+    if (hh && hh.hero === "hoot") { const g = heroStats("hoot", hh.hlvl).waveGlitter; if (g) { coins += g; say(hh.x, hh.y - 44, `+${g} glitter from the Professor`, "#8a5d00", 1.8, 18); } }
+  }
+
   function update(dt) {
     for (const t of towers) if (t.type !== "hero") t.st = getStats(t);
     if (waveActive) {
@@ -2427,26 +2457,9 @@
       while (queue.length && queue[0].t <= waveTime) spawn(queue.shift().kind);
       if (!queue.length && !enemies.length && !newborn.length) {
         waveActive = false;
-        for (const t of towers) if (t.type === "jar" && t.st) {
-          while ((t.made || 0) < t.st.piles) makeDrop(t);
-          if (t.st.bank && t.bank > 0) {
-            const gain = Math.min(t.st.cap, Math.floor(t.bank * (1 + t.st.interest))) - Math.floor(t.bank);
-            t.bank = Math.min(t.st.cap, t.bank + gain);
-            if (gain > 0) say(t.x, t.y - 46, `+${gain} interest`, "#2f8a4c", 1.6, 17);
-          }
-        }
+        if (rewardedWave < wave) waveRewards();
         const bonus = (8 + wave * 2) * (towers.some((o) => o.type === "jar" && o.st && o.st.empire) ? 3 : 1);
         coins += bonus;
-        for (const t of towers) if (t.type !== "hero") prog.txp[t.type] = (prog.txp[t.type] || 0) + 8 + wave * 2;
-        saveProg();
-        for (const t of towers) if (t.type === "heart" && t.st) {
-          if (t.st.waveGlitter) { coins += t.st.waveGlitter; say(t.x, t.y - 34, `+${t.st.waveGlitter} glitter`, "#8a5d00", 1.5, 18); }
-          if (t.st.lifeWave) { lives += t.st.lifeWave; say(t.x, t.y - 54, `+${t.st.lifeWave} life`, "#e0525b", 1.5, 18); }
-        }
-        if (!xpHinted && ORDER.some(canUnlockAny)) { xpHinted = true; toast("Your stickers earned enough XP to unlock an upgrade. Open Menu, then the Upgrade book."); }
-        gainXP(40 + wave * 5);
-        const hh = heroTower();
-        if (hh && hh.hero === "hoot") { const g = heroStats("hoot", hh.hlvl).waveGlitter; if (g) { coins += g; say(hh.x, hh.y - 44, `+${g} glitter from the Professor`, "#8a5d00", 1.8, 18); } }
         earn("first");
         if (!lostThisWave && wave >= 3) earn("perfect");
         const prevNb = prog.best.notebook || 0;
@@ -3658,6 +3671,7 @@
     if (data && data.started && !data.over) {
       coins = data.coins ?? coins; lives = data.lives ?? lives;
       wave = Math.max(0, (data.wave ?? 0) - (data.waveActive ? 1 : 0));
+      rewardedWave = wave;
       const flip = !!data.portrait !== portrait;
       towers = (data.towers || []).filter((t) => TYPES[t.type]).map((t) => ({ ...t, x: flip ? t.y : t.x, y: flip ? t.x : t.y, cd: 0.2, pop: 0, kick: 0, sheen: 0, stun: 0, abCd: [0, 0], paths: t.paths || [0, 0, 0] }));
       towers.forEach((t) => { if (t.type !== "hero") t.level = artLevel(t); });
